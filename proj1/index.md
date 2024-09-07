@@ -21,7 +21,7 @@ Here are some images generated with this approach:
     <!-- Image 1 -->
     <div style="text-align: center;">
         <img src="images/output_base/cathedral.jpg" alt="cathedral.jpg" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">cathedral.jpg <br>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">cathedral <br>
         green align (2, 5) <br>
         red align (3, 12) </p>
     </div>
@@ -29,7 +29,7 @@ Here are some images generated with this approach:
     <!-- Image 2 -->
     <div style="text-align: center;">
         <img src="images/output_base/monastery.jpg" alt="monastery.jpg" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">monastery.jpg: <br>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">monastery: <br>
         green align (2, -3) <br>
         red align (2, 3) </p>
     </div>
@@ -37,7 +37,7 @@ Here are some images generated with this approach:
     <!-- Image 3 -->
     <div style="text-align: center;">
         <img src="images/output_base/tobolsk.jpg" alt="tobolsk.jpg" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">tobolsk.jpg <br>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">tobolsk <br>
         green align (3, 3) <br>
         red align (3, 6) </p>
     </div>
@@ -47,45 +47,45 @@ Here are some images generated with this approach:
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/output_base/harvesters.tif" alt="harvesters.tif" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">harvesters.tif <br>
+        <img src="images/output_base/harvesters.jpg" alt="harvesters.tif" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">harvesters <br>
         green align (16, 59) <br>
         red align (13, 124) </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/output_base/icon.tif" alt="icon.tif" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">icon.tif <br>
+        <img src="images/output_base/icon.jpg" alt="icon.tif" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">icon <br>
         green align (17, 41) <br>
         red align (23, 90) </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/output_base/lady.tif" alt="lady.tif" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">lady.tif <br>
+        <img src="images/output_base/lady.jpg" alt="lady.tif" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">lady <br>
         green align (8, 56) <br>
         red align (11, 116) </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/output_base/harvesters.tif" alt="harvesters.tif" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">harvesters.tif <br>
-        green align (16, 59) <br>
-        red align (13, 124) </p>
+        <img src="images/output_base/melons.jpg" alt="melons.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">melons <br>
+        green align (11, 82) <br>
+        red align (13, 178) </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/output_base/icon.tif" alt="icon.tif" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">icon.tif <br>
-        green align (17, 41) <br>
-        red align (23, 90) </p>
+        <img src="images/output_base/onion_church.jpg" alt="onion_church.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">onion_church <br>
+        green align (27, 51) <br>
+        red align (36, 108) </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/output_base/lady.tif" alt="lady.tif" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">lady.tif <br>
-        green align (8, 56) <br>
-        red align (11, 116) </p>
+        <img src="images/output_base/sculpture.jpg" alt="sculpture.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">sculpture <br>
+        green align (-11, 33) <br>
+        red align (-27, 140) </p>
     </div>
 
     <!-- Repeat for other images -->
@@ -103,9 +103,10 @@ IMAGES GO HERE
 ### Automatic Border Cropping
 We implemented automatic border cropping to eliminate some of the black and white edges as well as residual alignment artifacts on the borders of images. 
 
-The idea behind our border cropping algorithm is that pixels across all RGB channels will be fairly similar if they are actually part of the image, i.e. each channel in the image should agree with the others to some reasonable extent. We computed the total absolute difference between all RBG channels and checked 
+The idea behind our border cropping algorithm is that pixels across all RGB channels should be fairly similar if they are actually part of the image, i.e. each channel in the image should agree with the others to some reasonable extent. To implement this, we computed the total absolute difference between all RBG channels. Then, for each row and column, we checked whether 70% of the pixels had a total absolute difference less than 1. If yes, then we kept that row/column, and if not, then we cropped it out.
 
-1. Check if 70% of each row/col are similar enough to keep, since pixels will generally have RGB values that are fairly simi
+We also cropped out black and white borders on our images. For each row and column, we checked if the mean of the RGB values was both greater than 0.08 and less than 0.94, since pixels with mean values outside of this range were either black or white. 
+
 
 <div style="display: grid; grid-template-columns: auto repeat(3, 1fr); grid-template-rows: auto repeat(5, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <!-- Empty top-left cell -->
