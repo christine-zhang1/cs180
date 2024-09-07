@@ -15,6 +15,8 @@ The alignment procedure uses an image pyramid, which allows the algorithm to pro
     * Search in a 2x2 set of possible displacements for the best alignment around the result*2 from the previous case.
     * Return the displacement vector (i, j) that gives the best SSD alignment.
 
+When calculating the best alignment, we cut off 10% of the image height off from the top and bottom, and 10% of the image width off from the left and right. This helped prevent differences in the channels' borders from affecting the alignment. However, my output images are using the uncropped channels; the alignment displacement vector should be the same regardless.
+
 Here are some images generated with this approach:
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
@@ -88,7 +90,40 @@ Here are some images generated with this approach:
         red align (-27, 140) </p>
     </div>
 
-    <!-- Repeat for other images -->
+    <div style="text-align: center;">
+        <img src="images/output_base/self_portrait.jpg" alt="self_portrait.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">self_portrait <br>
+        green align (29, 79) <br>
+        red align (37, 176) </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/output_base/three_generations.jpg" alt="three_generations.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">three_generations <br>
+        green align (14, 53) <br>
+        red align (11, 112) </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/output_base/train.jpg" alt="train.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">train <br>
+        green align (6, 43) <br>
+        red align (32, 87) </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/output_base/church_ssd.jpg" alt="church.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">church <br>
+        green align (4, 25) <br>
+        red align (267, 64) </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/output_base/emir.jpg" alt="emir.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">emir <br>
+        green align (24, 49) <br>
+        red align (57, 103) </p>
+    </div>
 </div>
 
 ## Bells and Whistles
