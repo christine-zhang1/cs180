@@ -168,37 +168,86 @@ Complete results are shown below. The first column contains the original aligned
     <div></div>
 
     <!-- Column Labels -->
-    <div style="font-weight: bold;">Col 1</div>
-    <div style="font-weight: bold;">Col 2</div>
-    <div style="font-weight: bold;">Col 3</div>
+    <div style="font-weight: bold;">Original Aligned</div>
+    <div style="font-weight: bold;">Cropped</div>
+    <div style="font-weight: bold;">Contrasted</div>
 
-    <!-- Row 1 -->
     <div style="font-weight: bold;">Row 1</div>
-    <div><img src="image1.jpg" alt="Image 1" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
-    <img src="image2.jpg" alt="Image 2" style="width: 100%; height: auto; display: block; border-radius: 5px;">
-    <img src="image3.jpg" alt="Image 3" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <div><img src="images/output_base/cathedral.jpg" alt="Image 1" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="mages/output_cropped/cathedral.jpg" alt="Image 2" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="mages/output_contrasted/cathedral.jpg" alt="Image 3" style="width: 100%; height: auto; display: block; border-radius: 5px;">
 
-    <!-- Row 2 -->
     <div style="font-weight: bold;">Row 2</div>
-    <div><img src="image4.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
-    <img src="image5.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
-    <img src="image6.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <div><img src="images/output_base/church.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/church.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/church.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+
+    <div style="font-weight: bold;">Row 3</div>
+    <div><img src="images/output_base/emir.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/emir.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/emir.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+
+    <div style="font-weight: bold;">Row 4</div>
+    <div><img src="images/output_base/harvesters.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/harvesters.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/harvesters.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+
+    <div style="font-weight: bold;">Row 5</div>
+    <div><img src="images/output_base/icon.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/icon.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/icon.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+
+    <!-- cathedral -->
+    <div style="font-weight: bold;">Row 1</div>
+    <div><img src="images/output_base/lady.jpg" alt="Image 1" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/lady.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/lady.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+
+    <!-- church -->
+    <div style="font-weight: bold;">Row 2</div>
+    <div><img src="images/output_base/melons.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/melons.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/melons.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
 
     <!-- Row 3 -->
     <div style="font-weight: bold;">Row 3</div>
-    <div><img src="image4.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
-    <img src="image8.jpg" alt="Image 8" style="width: 100%; height: auto; display: block; border-radius: 5px;">
-    <img src="image9.jpg" alt="Image 9" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <div><img src="images/output_base/monastery.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/monastery.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/monastery.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
 
     <!-- Row 4 -->
     <div style="font-weight: bold;">Row 4</div>
-    <div><img src="image4.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
-    <img src="image11.jpg" alt="Image 11" style="width: 100%; height: auto; display: block; border-radius: 5px;">
-    <img src="image12.jpg" alt="Image 12" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <div><img src="images/output_base/onion_church.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/onion_church.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/onion_church.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
 
     <!-- Row 5 -->
     <div style="font-weight: bold;">Row 5</div>
-    <div><img src="image4.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
-    <img src="image14.jpg" alt="Image 14" style="width: 100%; height: auto; display: block; border-radius: 5px;">
-    <img src="image15.jpg" alt="Image 15" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <div><img src="images/output_base/sculpture.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/sculpture.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/sculpture.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+
+    <!-- cathedral -->
+    <div style="font-weight: bold;">Row 1</div>
+    <div><img src="images/output_base/self_portrait.jpg" alt="Image 1" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/self_portrait.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/self_portrait.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+
+    <!-- church -->
+    <div style="font-weight: bold;">Row 2</div>
+    <div><img src="images/output_base/three_generations.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/three_generations.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/three_generations.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+
+    <!-- Row 3 -->
+    <div style="font-weight: bold;">Row 3</div>
+    <div><img src="images/output_base/tobolsk.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/tobolsk.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/tobolsk.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+
+    <!-- Row 4 -->
+    <div style="font-weight: bold;">Row 4</div>
+    <div><img src="images/output_base/train.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/train.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/train.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
 </div>
