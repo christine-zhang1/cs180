@@ -41,24 +41,49 @@ Here are some images generated with this approach:
         green align (3, 3) <br>
         red align (3, 6) </p>
     </div>
+</div>
+
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/output_base/harvesters.jpg" alt="harvesters.jpg" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">harvesters.jpg <br>
+        <img src="images/output_base/harvesters.tif" alt="harvesters.tif" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">harvesters.tif <br>
         green align (16, 59) <br>
         red align (13, 124) </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/output_base/icon.jpg" alt="icon.jpg" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">icon.jpg <br>
+        <img src="images/output_base/icon.tif" alt="icon.tif" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">icon.tif <br>
         green align (17, 41) <br>
         red align (23, 90) </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/output_base/lady.jpg" alt="lady.jpg" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">lady.jpg <br>
+        <img src="images/output_base/lady.tif" alt="lady.tif" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">lady.tif <br>
+        green align (8, 56) <br>
+        red align (11, 116) </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/output_base/harvesters.tif" alt="harvesters.tif" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">harvesters.tif <br>
+        green align (16, 59) <br>
+        red align (13, 124) </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/output_base/icon.tif" alt="icon.tif" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">icon.tif <br>
+        green align (17, 41) <br>
+        red align (23, 90) </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/output_base/lady.tif" alt="lady.tif" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">lady.tif <br>
         green align (8, 56) <br>
         red align (11, 116) </p>
     </div>
@@ -76,9 +101,11 @@ Here are corrected images for `emir.tif` and `church.tif` using structural simil
 IMAGES GO HERE
 
 ### Automatic Border Cropping
-We implemented automatic border cropping to eliminate some of the black and white edges as well as residual alignment artifacts on the borders of images. The border cropping method was as follows:
+We implemented automatic border cropping to eliminate some of the black and white edges as well as residual alignment artifacts on the borders of images. 
 
-1. Check if 
+The idea behind our border cropping algorithm is that pixels across all RGB channels will be fairly similar if they are actually part of the image, i.e. each channel in the image should agree with the others to some reasonable extent. We computed the total absolute difference between all RBG channels and checked 
+
+1. Check if 70% of each row/col are similar enough to keep, since pixels will generally have RGB values that are fairly simi
 
 <div style="display: grid; grid-template-columns: auto repeat(3, 1fr); grid-template-rows: auto repeat(5, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <!-- Empty top-left cell -->
@@ -97,25 +124,25 @@ We implemented automatic border cropping to eliminate some of the black and whit
 
     <!-- Row 2 -->
     <div style="font-weight: bold;">Row 2</div>
-    <div><img src="image4.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 3px solid red;"></div>
+    <div><img src="image4.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
     <img src="image5.jpg" alt="Image 5" style="width: 100%; height: auto; display: block; border-radius: 5px;">
     <img src="image6.jpg" alt="Image 6" style="width: 100%; height: auto; display: block; border-radius: 5px;">
 
     <!-- Row 3 -->
     <div style="font-weight: bold;">Row 3</div>
-    <div><img src="image4.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 3px solid red;"></div>
+    <div><img src="image4.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
     <img src="image8.jpg" alt="Image 8" style="width: 100%; height: auto; display: block; border-radius: 5px;">
     <img src="image9.jpg" alt="Image 9" style="width: 100%; height: auto; display: block; border-radius: 5px;">
 
     <!-- Row 4 -->
     <div style="font-weight: bold;">Row 4</div>
-    <div><img src="image4.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 3px solid red;"></div>
+    <div><img src="image4.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
     <img src="image11.jpg" alt="Image 11" style="width: 100%; height: auto; display: block; border-radius: 5px;">
     <img src="image12.jpg" alt="Image 12" style="width: 100%; height: auto; display: block; border-radius: 5px;">
 
     <!-- Row 5 -->
     <div style="font-weight: bold;">Row 5</div>
-    <div><img src="image4.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 3px solid red;"></div>
+    <div><img src="image4.jpg" alt="Image 4" style="width: 100%; height: auto; display: block; border: 2px solid red;"></div>
     <img src="image14.jpg" alt="Image 14" style="width: 100%; height: auto; display: block; border-radius: 5px;">
     <img src="image15.jpg" alt="Image 15" style="width: 100%; height: auto; display: block; border-radius: 5px;">
 </div>
