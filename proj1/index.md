@@ -19,8 +19,8 @@ When calculating the best alignment, we cut off 10% of the image height off from
 
 Here are some images generated with this approach:
 
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-    <!-- Image 1 -->
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
     <div style="text-align: center;">
         <img src="images/output_base/cathedral.jpg" alt="cathedral.jpg" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">cathedral <br>
@@ -31,7 +31,7 @@ Here are some images generated with this approach:
     <!-- Image 2 -->
     <div style="text-align: center;">
         <img src="images/output_base/monastery.jpg" alt="monastery.jpg" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">monastery: <br>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">monastery <br>
         green align (2, -3) <br>
         red align (2, 3) </p>
     </div>
@@ -43,10 +43,6 @@ Here are some images generated with this approach:
         green align (3, 3) <br>
         red align (3, 6) </p>
     </div>
-</div>
-
-
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
         <img src="images/output_base/harvesters.jpg" alt="harvesters.tif" style="width: 100%; height: auto; display: block;">
@@ -119,7 +115,7 @@ Here are some images generated with this approach:
     </div>
 
     <div style="text-align: center;">
-        <img src="images/output_base/emir.jpg" alt="emir.jpg" style="width: 100%; height: auto; display: block;">
+        <img src="images/output_base/emir_ssd.jpg" alt="emir.jpg" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">emir <br>
         green align (24, 49) <br>
         red align (57, 103) </p>
@@ -133,14 +129,38 @@ As we can see in `emir.tif` and `church.tif` above, SSD does not perform well in
 
 Here are corrected images for `emir.tif` and `church.tif` using structural similarity.
 
-IMAGES GO HERE
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/output_base/church.jpg" alt="church.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">church <br>
+        green align (4, 25) <br>
+        red align (-4, 58) </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/output_base/emir.jpg" alt="emir.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">emir <br>
+        green align (23, 50) <br>
+        red align (40, 105) </p>
+    </div>
+</div>
+
+SSIM might be more suited for these images because it doesn't operate on the RGB color space. In these images, one channel (e.g. blue for Emir's jacket) could be dominating over the other channels, which might be throwing off the SSD metric.
 
 ### Automatic Border Cropping
 We implemented automatic border cropping to eliminate some of the black and white edges as well as residual alignment artifacts on the borders of images. 
 
 The idea behind our border cropping algorithm is that pixels across all RGB channels should be fairly similar if they are actually part of the image, i.e. each channel in the image should agree with the others to some reasonable extent. To implement this, we computed the total absolute difference between all RBG channels. Then, for each row and column, we checked whether 70% of the pixels had a total absolute difference less than 1. If yes, then we kept that row/column, and if not, then we cropped it out.
 
-We also cropped out black and white borders on our images. For each row and column, we checked if the mean of the RGB values was both greater than 0.08 and less than 0.94, since pixels with mean values outside of this range were either black or white. 
+We also cropped out black and white borders on our images. For each row and column, we checked if the mean of the RGB values was both greater than 0.08 and less than 0.94, since pixels with mean values outside of this range were either (sufficiently) black or white. If the mean of a row/column did not lie in this range, then we cropped out that row/column.
+
+Cropped images are shown below the next section.
+
+### Automatic Contrast
+We implemented automatic contrast after cropping. We used `skimage.exposure.equalize_adapthist`, which is an algorithm for local contrast enhancement that uses histograms computed over different tile regions of the image. This algorithm allows local details to be enhanced even in regions that are darker or lighter than most of the image.
+
+Complete results are shown below. The first column contains the original aligned images, the second column contains the cropped images, and the third column contains the cropped images after contrast. The images in the first column have red borders to show white edges that are cropped out by the automatic cropping algorithm.
 
 
 <div style="display: grid; grid-template-columns: auto repeat(3, 1fr); grid-template-rows: auto repeat(5, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
