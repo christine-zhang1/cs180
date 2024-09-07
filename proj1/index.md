@@ -20,31 +20,65 @@ Here are some images generated with this approach:
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <!-- Image 1 -->
     <div style="text-align: center;">
-        <img src="output_base/cathedral.jpg" alt="cathedral.jpg" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">cathedral.jpg: green align (5, 2), red align (12, 3) </p>
+        <img src="images/output_base/cathedral.jpg" alt="cathedral.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">cathedral.jpg <br>
+        green align (2, 5) <br>
+        red align (3, 12) </p>
     </div>
 
     <!-- Image 2 -->
-    <div class="grid-item">
-        <img src="output_base/monastery.jpg" alt="monastery.jpg" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">monastery.jpg: green align (-3, 2), red align (3, 2) </p>
+    <div style="text-align: center;">
+        <img src="images/output_base/monastery.jpg" alt="monastery.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">monastery.jpg: <br>
+        green align (2, -3) <br>
+        red align (2, 3) </p>
     </div>
 
     <!-- Image 3 -->
-    <div class="grid-item">
-        <img src="output_base/tobolsk.jpg" alt="tobolsk.jpg" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">tobolsk.jpg: green align (3, 3), red align (6, 3) </p>
+    <div style="text-align: center;">
+        <img src="images/output_base/tobolsk.jpg" alt="tobolsk.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">tobolsk.jpg <br>
+        green align (3, 3) <br>
+        red align (3, 6) </p>
     </div>
 
-    <!-- Image 3 -->
-    <div class="grid-item">
-        <img src="output_base/tobolsk.jpg" alt="tobolsk.jpg" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">tobolsk.jpg: green align (3, 3), red align (6, 3) </p>
+    <div style="text-align: center;">
+        <img src="images/output_base/harvesters.jpg" alt="harvesters.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">harvesters.jpg <br>
+        green align (16, 59) <br>
+        red align (13, 124) </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/output_base/icon.jpg" alt="icon.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">icon.jpg <br>
+        green align (17, 41) <br>
+        red align (23, 90) </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/output_base/lady.jpg" alt="lady.jpg" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">lady.jpg <br>
+        green align (8, 56) <br>
+        red align (11, 116) </p>
     </div>
 
     <!-- Repeat for other images -->
 </div>
 
+## Bells and Whistles
+
+### Structural Similarity
+As we can see in `emir.tif` and `church.tif` above, SSD does not perform well in certain situations. We ran alignment using `skimage.metrics.structural_similarity` (SSIM) instead, and it produced better results. SSIM uses a sliding window approach to compare structural similarity between local parts of the image as opposed to just performing one comparison over all pixels in the image.
+
+Here are corrected images for `emir.tif` and `church.tif` using structural similarity.
+
+IMAGES GO HERE
+
+### Automatic Border Cropping
+We implemented automatic border cropping to eliminate some of the black and white edges as well as residual alignment artifacts on the borders of images. The border cropping method was as follows:
+
+1. Check if 
 
 <div style="display: grid; grid-template-columns: auto repeat(3, 1fr); grid-template-rows: auto repeat(5, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <!-- Empty top-left cell -->
