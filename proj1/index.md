@@ -155,7 +155,32 @@ The idea behind our border cropping algorithm is that pixels across all RGB chan
 
 We also cropped out black and white borders on our images. For each row and column, we checked if the mean of the RGB values was both greater than 0.08 and less than 0.94, since pixels with mean values outside of this range were either (sufficiently) black or white. If the mean of a row/column did not lie in this range, then we cropped out that row/column.
 
-Cropped images are shown below the next section.
+Here are a few original and cropped images. The original images in the first column have red borders to show white edges that are cropped out by the automatic cropping algorithm.
+
+<div style="display: grid; grid-template-columns: auto repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+    <!-- Empty top-left cell -->
+    <div></div>
+
+    <!-- Column Labels -->
+    <div style="font-weight: bold;">Original Aligned</div>
+    <div style="font-weight: bold;">Cropped</div>
+
+    <div style="font-weight: bold;">lady</div>
+    <div><img src="images/output_base/lady.jpg" alt="Image 1" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/lady.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
+
+    <div style="font-weight: bold;">melons</div>
+    <div><img src="images/output_base/melons.jpg" alt="Image 4" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/melons.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
+
+    <div style="font-weight: bold;">onion_church</div>
+    <div><img src="images/output_base/onion_church.jpg" alt="Image 4" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/onion_church.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
+
+    <div style="font-weight: bold;">self_portrait</div>
+    <div><img src="images/output_base/self_portrait.jpg" alt="Image 1" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;"></div>
+    <img src="images/output_cropped/self_portrait.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
+</div>
 
 ### Automatic Contrast
 We implemented automatic contrast after cropping. We used `skimage.exposure.equalize_adapthist`, which is an algorithm for local contrast enhancement that uses histograms computed over different tile regions of the image. This algorithm allows local details to be enhanced even in regions that are darker or lighter than most of the image.
@@ -163,7 +188,7 @@ We implemented automatic contrast after cropping. We used `skimage.exposure.equa
 Complete results are shown below. The first column contains the original aligned images, the second column contains the cropped images, and the third column contains the cropped images after contrast. The images in the first column have red borders to show white edges that are cropped out by the automatic cropping algorithm.
 
 
-<div style="display: grid; grid-template-columns: auto repeat(3, 1fr); grid-template-rows: auto repeat(5, 1fr); grid-gap: 10px; padding: 20px; max-width: 1600px; margin: auto; align-items: center; justify-items: center;">
+<div style="display: grid; grid-template-columns: auto repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1600px; margin: auto; align-items: center; justify-items: center;">
     <!-- Empty top-left cell -->
     <div></div>
 
@@ -197,55 +222,46 @@ Complete results are shown below. The first column contains the original aligned
     <img src="images/output_cropped/icon.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
     <img src="images/output_contrasted/icon.jpg" alt="Image 6" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;">
 
-    <!-- cathedral -->
     <div style="font-weight: bold;">lady</div>
     <div><img src="images/output_base/lady.jpg" alt="Image 1" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;"></div>
     <img src="images/output_cropped/lady.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
     <img src="images/output_contrasted/lady.jpg" alt="Image 6" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;">
 
-    <!-- church -->
     <div style="font-weight: bold;">melons</div>
     <div><img src="images/output_base/melons.jpg" alt="Image 4" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;"></div>
     <img src="images/output_cropped/melons.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
     <img src="images/output_contrasted/melons.jpg" alt="Image 6" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;">
 
-    <!-- Row 3 -->
     <div style="font-weight: bold;">monastery</div>
     <div><img src="images/output_base/monastery.jpg" alt="Image 4" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;"></div>
     <img src="images/output_cropped/monastery.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
     <img src="images/output_contrasted/monastery.jpg" alt="Image 6" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;">
 
-    <!-- Row 4 -->
     <div style="font-weight: bold;">onion_church</div>
     <div><img src="images/output_base/onion_church.jpg" alt="Image 4" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;"></div>
     <img src="images/output_cropped/onion_church.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
     <img src="images/output_contrasted/onion_church.jpg" alt="Image 6" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;">
 
-    <!-- Row 5 -->
     <div style="font-weight: bold;">sculpture</div>
     <div><img src="images/output_base/sculpture.jpg" alt="Image 4" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;"></div>
     <img src="images/output_cropped/sculpture.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
     <img src="images/output_contrasted/sculpture.jpg" alt="Image 6" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;">
 
-    <!-- cathedral -->
     <div style="font-weight: bold;">self_portrait</div>
     <div><img src="images/output_base/self_portrait.jpg" alt="Image 1" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;"></div>
     <img src="images/output_cropped/self_portrait.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
     <img src="images/output_contrasted/self_portrait.jpg" alt="Image 6" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;">
 
-    <!-- church -->
     <div style="font-weight: bold;">three_generations</div>
     <div><img src="images/output_base/three_generations.jpg" alt="Image 4" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;"></div>
     <img src="images/output_cropped/three_generations.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
     <img src="images/output_contrasted/three_generations.jpg" alt="Image 6" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;">
 
-    <!-- Row 3 -->
     <div style="font-weight: bold;">tobolsk</div>
     <div><img src="images/output_base/tobolsk.jpg" alt="Image 4" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;"></div>
     <img src="images/output_cropped/tobolsk.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
     <img src="images/output_contrasted/tobolsk.jpg" alt="Image 6" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;">
 
-    <!-- Row 4 -->
     <div style="font-weight: bold;">train</div>
     <div><img src="images/output_base/train.jpg" alt="Image 4" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;"></div>
     <img src="images/output_cropped/train.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border: 2px solid red;">
