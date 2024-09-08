@@ -9,15 +9,17 @@ First, we separate the color channels by computing 1/3 of the total height of th
 
 The alignment procedure uses an image pyramid, which allows the algorithm to process large images. We use the sum of squared differences (SSD) as the metric to compare alignment between channels — a lower SSD means the channels are more aligned. The procedure is as follows:
 
-* If either dimension of the image size is less than 256, then exhaustively search a 16x15 set of possible displacements for the best alignment. Specifically, search in a range of [-16, 15] for both the x and y dimensions. Return the displacement vector (i, j) that gives the best SSD alignment.
+* If either dimension of the image size is less than 256, then exhaustively search a 15x15 set of possible displacements for the best alignment. Specifically, search in a range of [-15, 15] for both the x and y dimensions. Return the displacement vector `(i, j)` that gives the best SSD alignment.
 * Else, rescale the image to half the height and half the width, and run the procedure again. After getting the result from the previous recursive case, make appropriate adjustments:
-    * Multiply the result by 2 to account for scaling up the image size
-    * Search in a 2x2 set of possible displacements for the best alignment around the result*2 from the previous case.
-    * Return the displacement vector (i, j) that gives the best SSD alignment.
+    * Multiply the result by 2 to account for scaling up the image size.
+    * Search in a 2x2 set of possible displacements for the best alignment around the result*2 from the previous recursive case.
+    * Return the displacement vector `(i, j)` that gives the best SSD alignment.
 
 When calculating the best alignment, we cut off 10% of the image height off from the top and bottom, and 10% of the image width off from the left and right. This helped prevent differences in the channels' borders from affecting the alignment. However, my output images are using the uncropped channels; the alignment displacement vector should be the same regardless.
 
-Here are some images generated with this approach:
+We ran this procedure for aligning red to blue, and then for aligning green to blue. We then shifted the red and green channels by their respective best displacement vectors to align all 3 channels with each other.
+
+Here are some images generated with this approach.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
@@ -125,7 +127,7 @@ Here are some images generated with this approach:
 ## Bells and Whistles
 
 ### Structural Similarity
-As we can see in `emir.tif` and `church.tif` above, SSD does not perform well in certain situations. We ran alignment using `skimage.metrics.structural_similarity` (SSIM) instead, and it produced better results. SSIM uses a sliding window approach to compare structural similarity between local parts of the image as opposed to just performing one comparison over all pixels in the image.
+As we can see in `emir.tif` and `church.tif` above, SSD does not perform well in certain situations. We ran the alignment procedure using `skimage.metrics.structural_similarity` (SSIM) instead, and it produced better results. SSIM uses a sliding window approach to compare structural similarity between local parts of the image as opposed to just performing one comparison over all pixels in the image.
 
 Here are corrected images for `emir.tif` and `church.tif` using structural similarity.
 
@@ -146,7 +148,7 @@ Here are corrected images for `emir.tif` and `church.tif` using structural simil
     </div>
 </div>
 
-SSIM might be more suited for these images because it doesn't operate on the RGB color space. In these images, one channel (e.g. blue for Emir's jacket) could be dominating over the other channels, which might be throwing off the SSD metric.
+SSIM might be more suited for these images because it doesn't operate on the RGB color space. In these images, one channel might be dominating over the other channels (e.g. blue in Emir's jacket), which might be throwing off the SSD metric.
 
 ### Automatic Border Cropping
 We implemented automatic border cropping to eliminate some of the black and white edges as well as residual alignment artifacts on the borders of images. 
@@ -183,7 +185,7 @@ Here are a few original and cropped images. The images have red borders to show 
 </div>
 
 ### Automatic Contrast
-We implemented automatic contrast after cropping. We used `skimage.exposure.equalize_adapthist`, which is an algorithm for local contrast enhancement that uses histograms computed over different tile regions of the image. This algorithm allows local details to be enhanced even in regions that are darker or lighter than most of the image.
+After cropping, we implemented automatic contrast. We used `skimage.exposure.equalize_adapthist`, which is an algorithm for local contrast enhancement that uses histograms computed over different tile regions of the image. This algorithm allows local details to be enhanced even in regions that are darker or lighter than most of the image.
 
 Here are a few images shown before and after contrast.
 
@@ -211,7 +213,6 @@ Here are a few images shown before and after contrast.
 ### Appendix
 
 Complete results are shown below. The first column contains the original aligned images, the second column contains the cropped images, and the third column contains the cropped images after contrast. The images in the first two columns have red borders to show white edges that are cropped out by the automatic cropping algorithm.
-
 
 <div style="display: grid; grid-template-columns: auto repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1600px; margin: auto; align-items: center; justify-items: center;">
     <!-- Empty top-left cell -->
