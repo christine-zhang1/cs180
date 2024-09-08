@@ -155,7 +155,7 @@ The idea behind our border cropping algorithm is that pixels across all RGB chan
 
 We also cropped out black and white borders on our images. For each row and column, we checked if the mean of the RGB values was both greater than 0.08 and less than 0.94, since pixels with mean values outside of this range were either (sufficiently) black or white. If the mean of a row/column did not lie in this range, then we cropped out that row/column.
 
-Here are a few original and cropped images. The original images in the first column have red borders to show white edges that are cropped out by the automatic cropping algorithm.
+Here are a few original and cropped images. The images have red borders to show white edges that are cropped out by the automatic cropping algorithm.
 
 <div style="display: grid; grid-template-columns: auto repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <!-- Empty top-left cell -->
@@ -185,7 +185,32 @@ Here are a few original and cropped images. The original images in the first col
 ### Automatic Contrast
 We implemented automatic contrast after cropping. We used `skimage.exposure.equalize_adapthist`, which is an algorithm for local contrast enhancement that uses histograms computed over different tile regions of the image. This algorithm allows local details to be enhanced even in regions that are darker or lighter than most of the image.
 
-Complete results are shown below. The first column contains the original aligned images, the second column contains the cropped images, and the third column contains the cropped images after contrast. The images in the first column have red borders to show white edges that are cropped out by the automatic cropping algorithm.
+Here are a few images shown before and after contrast.
+
+<div style="display: grid; grid-template-columns: auto repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+    <!-- Empty top-left cell -->
+    <div></div>
+
+    <!-- Column Labels -->
+    <div style="font-weight: bold;">Before</div>
+    <div style="font-weight: bold;">After</div>
+
+    <div style="font-weight: bold;">cathedral</div>
+    <img src="images/output_cropped/cathedral.jpg" alt="Image 2" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;">
+    <img src="images/output_contrasted/cathedral.jpg" alt="Image 3" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;">
+
+    <div style="font-weight: bold;">harvesters</div>
+    <img src="images/output_cropped/harvesters.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px">
+    <img src="images/output_contrasted/harvesters.jpg" alt="Image 6" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;">
+
+    <div style="font-weight: bold;">self_portrait</div>
+    <div><img src="images/output_cropped/self_portrait.jpg" alt="Image 1" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;"></div>
+    <img src="images/output_contrasted/self_portrait.jpg" alt="Image 5" style="width: 100%; height: auto; max-height: 400px; display: block; border-radius: 5px;">
+</div>
+
+### Appendix
+
+Complete results are shown below. The first column contains the original aligned images, the second column contains the cropped images, and the third column contains the cropped images after contrast. The images in the first two columns have red borders to show white edges that are cropped out by the automatic cropping algorithm.
 
 
 <div style="display: grid; grid-template-columns: auto repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1600px; margin: auto; align-items: center; justify-items: center;">
