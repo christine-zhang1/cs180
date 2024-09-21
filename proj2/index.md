@@ -51,7 +51,7 @@ Comparing this to the results in part 1.1, we see that these images are much les
 
 We check that we get the same results by convolving the gaussian with `D_x` and `D_y` first.
 
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+<div style="display: grid; grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
         <img src="images/part1/gaussian_filters.png" alt="img" style="width: 100%; height: auto; display: block;">
@@ -79,26 +79,61 @@ The images are the same as the images we got after blurring the image and then a
 ## Part 2: Fun with Frequencies
 ### Part 2.1: Image "Sharpening"
 
+We "sharpen" an image following this procedure:
+1. Convolve the image with a Gaussian kernel to get the low frequencies of the image
+2. Calculate the high frequencies using `details = original - blurred`
+3. Get the sharpened image using `sharpened = original + alpha * details`
+
+For my Taj Mahal image, we used a Gaussian kernel size 7, Gaussian standard deviation 1, and `alpha = 2`.
+
+For my dog image, we used Gaussian kernel size 9, Gaussian standard deviation 1.5, and `alpha = 2`.
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/part2/taj.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original Taj Mahal image</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2/taj_7_1_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Sharpened Taj Mahal image </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2/dog.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original dog image</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2/dog_9_15_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Sharpened dog image </p>
+    </div>
+</div>
+
+We blur the sharpened dog image and attempt to resharpen it afterwards. To blur, we used Gaussian kernel size 5 and standard deviation 1. To resharpen, we used Gaussian kernel size 7, Gaussian standard deviation 1, and `alpha=2`.
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/part2/dog_sharpened_blurred.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Blurred sharpened dog image</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2/dog_resharpened_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Resharpened dog image </p>
+    </div>
+</div>
+
+We can see that although some features in the resharpened image look sharpened compared to the original dog image, there are many edges and details that are still blurred. This is because blurring the sharpened image removes the high frequency content. When we try to sharpen the image after blurring, there is not as much high frequency content to add back to the image, so the standard sharpening process does not work properly.
+
 ### Part 2.2: Hybrid Images
 
 ### Part 2.3: Gaussian and Laplacian Stacks
 
 ### Part 2.4: Multiresolution Blending
 
-## Approach
-First, we separate the color channels by computing 1/3 of the total height of the original image, and we splice the image into 3 parts of equal height. To align the channels, we align both the red and green channels to the blue channel.
-
-The alignment procedure uses an image pyramid, which allows the algorithm to process large images. We use the sum of squared differences (SSD) as the metric to compare alignment between channels — a lower SSD means the channels are more aligned. The procedure is as follows:
-
-* If either dimension of the image size is less than 256, then exhaustively search a 15x15 set of possible displacements for the best alignment. Specifically, search in a range of [-15, 15] for both the x and y dimensions. Return the displacement vector `(i, j)` that gives the best SSD alignment.
-* Else, rescale the image to half the height and half the width, and run the procedure again. After getting the result from the previous recursive case, make appropriate adjustments:
-    * Multiply the result by 2 to account for scaling up the image size.
-    * Search in a 2x2 set of possible displacements for the best alignment around the result*2 from the previous recursive case.
-    * Return the displacement vector `(i, j)` that gives the best SSD alignment.
-
-When calculating the best alignment, we cut off 10% of the image height off from the top and bottom, and 10% of the image width off from the left and right. This helped prevent differences in the channels' borders from affecting the alignment. However, my output images are using the uncropped channels; the alignment displacement vector should be the same regardless.
-
-We ran this procedure for aligning red to blue, and then for aligning green to blue. We then shifted the red and green channels by their respective best displacement vectors to align all 3 channels with each other.
 
 Here are some images generated with this approach.
 
