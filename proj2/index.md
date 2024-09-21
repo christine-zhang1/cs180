@@ -1,9 +1,38 @@
 # Fun with Filters and Frequencies
 
 ## Part 1: Fun with Filters
-### Part 1.1: Finite Difference 
+### Part 1.1: Finite Difference Operator
+We use the finite difference operators as defined below:
+```
+D_x = np.array([[1, -1]])
+D_y = np.array([[1], [-1]])
+```
+Convolving these with the camera image using `scipy.signal.convolve2d` with `mode='same'` and `boundary='symm'`, we get the following images. For the binarized image, we used a threshold of 0.2.
 
-### Part 1.2: Derivative of Gaussian (DoG) 
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/part1/dx_deriv_norm.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Partial x derivative </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part1/dy_deriv_norm.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Partial y derivative </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part1/grad_mag.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gradient magnitude </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part1/grad_mag_binary_thresh02.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gradient magnitude with threshold 0.2 </p>
+    </div>
+</div>
+
+### Part 1.2: Derivative of Gaussian (DoG) Filter
 
 
 ## Part 2: Fun with Frequencies
