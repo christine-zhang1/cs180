@@ -1,8 +1,19 @@
-# Images of the Russian Empire: Colorizing the Prokudin-Gorskii photo collection
+# Fun with Filters and Frequencies
 
-## Project Overview
+## Part 1: Fun with Filters
+### Part 1.1: Finite Difference 
 
-The goal of this project is to take the digitized Prokudin-Gorskii glass plate images and, using image processing techniques, automatically produce a color image with as few visual artifacts as possible. In order to do this, we extract the three color channel images, place them on top of each other, and align them so that they form a single RGB color image.
+### Part 1.2: Derivative of Gaussian (DoG) 
+
+
+## Part 2: Fun with Frequencies
+### Part 2.1: Image "Sharpening"
+
+### Part 2.2: Hybrid Images
+
+### Part 2.3: Gaussian and Laplacian Stacks
+
+### Part 2.4: Multiresolution Blending
 
 ## Approach
 First, we separate the color channels by computing 1/3 of the total height of the original image, and we splice the image into 3 parts of equal height. To align the channels, we align both the red and green channels to the blue channel.
