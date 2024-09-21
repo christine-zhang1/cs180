@@ -91,22 +91,22 @@ For my dog image, we used Gaussian kernel size 9, Gaussian standard deviation 1.
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/part2/taj.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part2_1/taj.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original Taj Mahal image</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part2/taj_7_1_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part2_12/taj_7_1_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Sharpened Taj Mahal image </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part2/dog.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part2_1/dog.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original dog image</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part2/dog_9_15_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part2_1/dog_9_15_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Sharpened dog image </p>
     </div>
 </div>
@@ -116,12 +116,12 @@ We blur the sharpened dog image and attempt to resharpen it afterwards. To blur,
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/part2/dog_sharpened_blurred.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part2_1/dog_sharpened_blurred.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Blurred sharpened dog image</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part2/dog_resharpened_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part2_1/dog_resharpened_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Resharpened dog image </p>
     </div>
 </div>
@@ -129,6 +129,7 @@ We blur the sharpened dog image and attempt to resharpen it afterwards. To blur,
 We can see that although some features in the resharpened image look sharpened compared to the original dog image, there are many edges and details that are still blurred. This is because blurring the sharpened image removes the high frequency content. When we try to sharpen the image after blurring, there is not as much high frequency content to add back to the image, so the standard sharpening process does not work properly.
 
 ### Part 2.2: Hybrid Images
+
 
 ### Part 2.3: Gaussian and Laplacian Stacks
 
