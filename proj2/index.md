@@ -28,12 +28,53 @@ Convolving these with the camera image using `scipy.signal.convolve2d` with `mod
 
     <div style="text-align: center;">
         <img src="images/part1/grad_mag_binary_thresh02.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gradient magnitude with threshold 0.2 </p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Binarized gradient magnitude with threshold 0.2 </p>
     </div>
 </div>
 
 ### Part 1.2: Derivative of Gaussian (DoG) Filter
+We blur the image by convolving it with a 2D Gaussian filter of kernel size 7 and standard deviation 1. Then, we repeat the procedure from part 1.1 on the blurred cameraman image.
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
+    <div style="text-align: center;">
+        <img src="images/part1/gaussian_grad_mag.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gradient magnitude </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part1/gaussian_grad_mag_binary_thresh01.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Binarized gradient magnitude with threshold 0.1 </p>
+    </div>
+</div>
+
+Comparing this to the results in part 1.1, we see that these images are much less noisy, and they capture the information about the edges in the image more cleanly and clearly. The gradient magnitude images look much smoother after we blur the image initially. This is because the Gaussian filter is a low pass filter, so it removes the high frequency components of the image, eliminating noise and causing edge detection to be more accurate.
+
+We check that we get the same results by convolving the gaussian with `D_x` and `D_y` first.
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/part1/gaussian_filters.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
+
+We convolve these "derivative of Gaussian" filters with our original image (unblurred) to get the images below.
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/part1/gaussian_grad_mag_dog.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gradient magnitude </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part1/gaussian_grad_mag_binary_thresh01_dog.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Binarized gradient magnitude with threshold 0.1 </p>
+    </div>
+</div>
+
+The images are the same as the images we got after blurring the image and then applying `D_x` and `D_y`, so these two techniques have the same effect.
 
 ## Part 2: Fun with Frequencies
 ### Part 2.1: Image "Sharpening"
