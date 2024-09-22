@@ -418,7 +418,7 @@ For my irregular mask, I blended a rubber duck's head with a real duck.
         Real duck <br>
         Rubber duck</p>
     </div>
+</div>
 
 ## Reflection
  The most important thing I learned during this project was how different frequencies in images affect our perception of those images. It was fun playing around with frequencies to blend images together, and I liked creating hybrid images that showed me how we see high frequencies close up and low frequencies from far away. I learned a lot about how changing frequencies can impact what we see in images.
-</div>
