@@ -193,7 +193,37 @@ To get the low frequency image, we apply a Gaussian blur. To get the high freque
 
 For the Smiskis, the eyes of the high-frequency Smiski still show up pretty clearly even when looking at the hybrid image from far away, since the eyes are very dark compared to the rest of the Smiski's face and body. Otherwise, the hybrid images seem to work.
 
-For a failure case, we tried to make a hybrid of a paper crane and a real crane.
+We do Fourier analyis on the Leafeon/Sylveon hybrid.
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/leafeon_fft.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Leafeon FFT</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/sylveon_fft.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Sylveon FFT </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/low_leafeon.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Low frequency Leafeon FFT</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/high_sylveon.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">High frequency Sylveon FFT</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/hybrid_eevee_fft.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Hybrid image FFT</p>
+    </div>
+</div>
+
+For a failure case, we try to make a hybrid of a paper crane and a real crane.
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
@@ -222,7 +252,7 @@ For a failure case, we tried to make a hybrid of a paper crane and a real crane.
 The crane hybrid does not really work because the dark lines of the paper crane are still very visible when viewing the image up close. These are high frequency components that don't get blurred out enough by the Gaussian filter.
 
 ### Bells and Whistles: Color
-I tried using color on the Leafeon/Sylveon hybrid to see if color would enhance the hybrid effect.
+We try using color on the Leafeon/Sylveon hybrid to see if color will enhance the hybrid effect.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
@@ -250,7 +280,17 @@ I tried using color on the Leafeon/Sylveon hybrid to see if color would enhance 
 Color does not seem to enhance the effect very much. In particular, using color for the high frequency image seems insignificant, since the process of subtracting the blurred image from the original already removes so much of the image's color. Using color for the low frequency image does not seem to make the hybrid effect better than just using grayscale.
 
 ### Part 2.3: Gaussian and Laplacian Stacks
+We create Gaussian and Laplacian stacks for both the apple and orange images. At every level of the Gaussian stack, we use a Gaussian kernel to blur the previous level to get the current level's output, which maintains the image's size across all levels of the stack. Each level of the Laplacian stack except for the last level is calculated from the Gaussian stack using `l_stack[i] = g_stack[i] - g_stack[i+1]`. For the last level of the Laplacian stack, we directly use the result from the last level of the Gaussian stack. This means that both stacks end up with the same number of images.
 
+Here are levels 0, 2, 4, 6, and 7 of my Laplacian stack, where I used a total of 8 layers (so layer 7 is the last). These levels are shown from top to bottom, with the apple images on the left column and the orange on the right.
+
+<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/part2_3/laplacians_oraple.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
 
 ### Part 2.4: Multiresolution Blending
 
