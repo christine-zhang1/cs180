@@ -323,7 +323,7 @@ All of these blends are done with 8 stack layers. The parameters used for genera
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part2_4/hybrid_sylveon_color.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part2_4/oraple_mask.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Vertical Mask<br>
         Initial blurring Gaussian kernel size 51, stdev 16 <br>
         Gaussian stack kernel size 31, stdev 15</p>
