@@ -203,12 +203,12 @@ For a failure case, we tried to make a hybrid of a paper crane and a real crane.
 
     <div style="text-align: center;">
         <img src="images/part2_2/paper_crane.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Derek </p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Paper crane </p>
     </div>
 
     <div style="text-align: center;">
         <img src="images/part2_2/real_crane.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Nutmeg </p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Real crane </p>
     </div>
 
     <div style="text-align: center;">
