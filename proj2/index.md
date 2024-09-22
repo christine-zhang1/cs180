@@ -1,7 +1,6 @@
 # Fun with Filters and Frequencies
 
-## Part 1: Fun with Filters
-### Part 1.1: Finite Difference Operator
+## Part 1.1: Finite Difference Operator
 We use the finite difference operators as defined below:
 ```
 D_x = np.array([[1, -1]])
@@ -32,7 +31,7 @@ Convolving these with the camera image using `scipy.signal.convolve2d` with `mod
     </div>
 </div>
 
-### Part 1.2: Derivative of Gaussian (DoG) Filter
+## Part 1.2: Derivative of Gaussian (DoG) Filter
 We blur the image by convolving it with a 2D Gaussian filter of kernel size 7 and standard deviation 1. Then, we repeat the procedure from part 1.1 on the blurred cameraman image.
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
@@ -76,8 +75,7 @@ We convolve these "derivative of Gaussian" filters with our original image (unbl
 
 The images look almost exactly the same as the images we got after blurring the image and then applying `D_x` and `D_y`, so these two techniques have the same effect.
 
-## Part 2: Fun with Frequencies
-### Part 2.1: Image "Sharpening"
+## Part 2.1: Image "Sharpening"
 
 We "sharpen" an image following this procedure:
 1. Convolve the image with a Gaussian kernel to get the low frequencies of the image
@@ -128,7 +126,7 @@ We blur the sharpened dog image and attempt to resharpen it afterwards. To blur,
 
 Some features in the resharpened image look sharpened compared to the original dog image, such as the cracks in the ground and the stairs in the background. However, there are many edges and details that still appear blurred, such as the dog's fur. This is because blurring the sharpened image removes the high frequency content. When we try to sharpen the image after blurring, there is not as much high frequency content to add back to the image, so the standard sharpening process does not work properly.
 
-### Part 2.2: Hybrid Images
+## Part 2.2: Hybrid Images
 We create hybrid images by combining the low frequencies of one image with the high frequencies of another image. This allows the hybrid image to show the high-frequency image when the viewer is close, and it shows the low-frequency image when the viewer is farther away.
 
 To get the low frequency image, we apply a Gaussian blur. To get the high frequency image, we apply a Gaussian blur and then calculate `details = original - blurred`, and we use `details` as the high frequencies. We then average the low and high frequency images pixel-wise to obtain the final hybrid image.
@@ -281,7 +279,7 @@ We try using color on the Leafeon/Sylveon hybrid to see if color will enhance th
 
 Color does not seem to enhance the effect very much. In particular, using color for the high frequency image seems insignificant, since the process of subtracting the blurred image from the original already removes so much of the image's color. Using color for the low frequency image does not seem to make the hybrid effect better than just using grayscale.
 
-### Part 2.3: Gaussian and Laplacian Stacks
+## Part 2.3: Gaussian and Laplacian Stacks
 We create Gaussian and Laplacian stacks for both the apple and orange images. At every level of the Gaussian stack, we use a Gaussian kernel to blur the previous level to get the current level's output, which maintains the image's size across all levels of the stack. Each level of the Laplacian stack except for the last level is calculated from the Gaussian stack using `l_stack[i] = g_stack[i] - g_stack[i+1]`. For the last level of the Laplacian stack, we directly use the result from the last level of the Gaussian stack. This means that both stacks end up with the same number of images.
 
 Here are levels 0, 2, 4, 6, and 7 of my Laplacian stack, where we use a total of 8 layers (so layer 7 is the last). These levels are shown from top to bottom. From left to right, the columns are: apple, orange, masked apple, masked orange, combined masked apple + masked orange.
@@ -296,7 +294,7 @@ Here are levels 0, 2, 4, 6, and 7 of my Laplacian stack, where we use a total of
 
 Each Laplacian stack image shown here is normalized (over the entire image, not by channel). However, when doing the multiresolution blending, we use the un-normalized versions of the Laplacian stack outputs.
 
-### Part 2.4: Multiresolution Blending
+## Part 2.4: Multiresolution Blending
 To blend two images `A` and `B` together, we generate the Laplacian stacks for each of these images `A_lstack` and `B_lstack`. We also generate a Gaussian stack for the mask `mask_gstack`. To combine the images with a smooth blend, we compute `(1 - mask_gstack[i]) * A_lstack[i] + mask_gstack[i] * B_lstack[i]` for each level `i` in the respective stack, and we add all of these contributions together. This works because `1 - mask_gstack[i]` reverses the mask, so the contribution from `A` is the "excluded" part of the original mask and the contribution from `B` is the "included" part of the original mask. The final output image has a smooth overall blend because we blend each band of frequencies through the Laplacian stack. We normalize the result for the final output.
 
 All of these blends are done with 8 stack layers. The parameters used for generating the Gaussian stack (and therefore the Laplacian stack) are stated in the caption under each image.
