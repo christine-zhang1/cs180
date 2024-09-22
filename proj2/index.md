@@ -7,7 +7,7 @@ We use the finite difference operators as defined below:
 D_x = np.array([[1, -1]])
 D_y = np.array([[1], [-1]])
 ```
-Convolving these with the camera image using `scipy.signal.convolve2d` with `mode='same'` and `boundary='symm'`, we get the following images. For the binarized image, we used a threshold of 0.2.
+Convolving these with the camera image using `scipy.signal.convolve2d` with `mode='same'` and `boundary='symm'`, we get the following images. For the binarized image, we used a threshold of 0.2. We computed the pixel-wise gradient magnitude using `np.sqrt(dx_deriv ** 2 + dy_deriv ** 2)`, which gets the L2 norm of the total gradient vector.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
@@ -47,7 +47,7 @@ We blur the image by convolving it with a 2D Gaussian filter of kernel size 7 an
     </div>
 </div>
 
-Comparing this to the results in part 1.1, we see that these images are much less noisy, and they capture the information about the edges in the image more cleanly and clearly. The gradient magnitude images look much smoother after we blur the image initially. This is because the Gaussian filter is a low pass filter, so it removes the high frequency components of the image, eliminating noise and causing edge detection to be more accurate.
+Comparing this to the results in part 1.1, we see that these images are much less noisy, and the edges in the image appear more clear, thick, and rounded. The noisy edges at the bottom of the image are also gone. This is because the blurring the initial image removes the high frequency components of the image since the Gaussian filter is a low pass filter. This eliminates noise and causes edge detection to be more accurate.
 
 We check that we get the same results by convolving the gaussian with `D_x` and `D_y` first.
 
@@ -74,7 +74,7 @@ We convolve these "derivative of Gaussian" filters with our original image (unbl
     </div>
 </div>
 
-The images are the same as the images we got after blurring the image and then applying `D_x` and `D_y`, so these two techniques have the same effect.
+The images look almost exactly the same as the images we got after blurring the image and then applying `D_x` and `D_y`, so these two techniques have the same effect.
 
 ## Part 2: Fun with Frequencies
 ### Part 2.1: Image "Sharpening"
@@ -84,9 +84,9 @@ We "sharpen" an image following this procedure:
 2. Calculate the high frequencies using `details = original - blurred`
 3. Get the sharpened image using `sharpened = original + alpha * details`
 
-For my Taj Mahal image, we used a Gaussian kernel size 7, Gaussian standard deviation 1, and `alpha = 2`.
+For the Taj Mahal image, we used a Gaussian kernel size 7, Gaussian standard deviation 1, and `alpha = 2`.
 
-For my dog image, we used Gaussian kernel size 9, Gaussian standard deviation 1.5, and `alpha = 2`.
+For the dog image, we used Gaussian kernel size 9, Gaussian standard deviation 1.5, and `alpha = 2`.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
@@ -126,12 +126,12 @@ We blur the sharpened dog image and attempt to resharpen it afterwards. To blur,
     </div>
 </div>
 
-We can see that although some features in the resharpened image look sharpened compared to the original dog image, there are many edges and details that are still blurred. This is because blurring the sharpened image removes the high frequency content. When we try to sharpen the image after blurring, there is not as much high frequency content to add back to the image, so the standard sharpening process does not work properly.
+Some features in the resharpened image look sharpened compared to the original dog image, such as the cracks in the ground and the stairs in the background. However, there are many edges and details that still appear blurred, such as the dog's fur. This is because blurring the sharpened image removes the high frequency content. When we try to sharpen the image after blurring, there is not as much high frequency content to add back to the image, so the standard sharpening process does not work properly.
 
 ### Part 2.2: Hybrid Images
 We create hybrid images by combining the low frequencies of one image with the high frequencies of another image. This allows the hybrid image to show the high-frequency image when the viewer is close, and it shows the low-frequency image when the viewer is farther away.
 
-To get the low frequency image, we apply a Gaussian blur. To get the high frequency image, we apply a Gaussian blur, and then do `details = original - blurred`. We then average the low and high frequency images to obtain the final hybrid image.
+To get the low frequency image, we apply a Gaussian blur. To get the high frequency image, we apply a Gaussian blur and then calculate `details = original - blurred`, and we use `details` as the high frequencies. We then average the low and high frequency images pixel-wise to obtain the final hybrid image.
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
@@ -294,12 +294,12 @@ Here are levels 0, 2, 4, 6, and 7 of my Laplacian stack, where we use a total of
     </div>
 </div>
 
-Each Laplacian stack image shown here is normalized (over the entire image, not by channel), but when doing the multiresolution blending, we use the un-normalized version of the Laplacian stack outputs.
+Each Laplacian stack image shown here is normalized (over the entire image, not by channel). However, when doing the multiresolution blending, we use the un-normalized versions of the Laplacian stack outputs.
 
 ### Part 2.4: Multiresolution Blending
-To blend two images `A` and `B` together, we generate the Laplacian stacks for each of these images `A_lstack` and `B_lstack`. We also generate a Gaussian stack for the mask `mask_gstack` after initially blurring the mask to soften the abrupt mask edges. To combine the images with a smooth blend, we compute `(1 - mask_gstack[i]) * A_lstack[i] + mask_gstack[i] * B_lstack[i]` for each level `i` in the respective stack, and we add all of these contributions together. This works because `(1 - mask_gstack[i])` reverses the mask, so the contribution from `A` is the "excluded" part of the original mask and the contribution from `B` in the "included" part of the original mask. We create the smooth overall blend on the final output image by blending each band of frequencies through the Laplacian stack. We normalize the result for the final output.
+To blend two images `A` and `B` together, we generate the Laplacian stacks for each of these images `A_lstack` and `B_lstack`. We also generate a Gaussian stack for the mask `mask_gstack`. To combine the images with a smooth blend, we compute `(1 - mask_gstack[i]) * A_lstack[i] + mask_gstack[i] * B_lstack[i]` for each level `i` in the respective stack, and we add all of these contributions together. This works because `1 - mask_gstack[i]` reverses the mask, so the contribution from `A` is the "excluded" part of the original mask and the contribution from `B` is the "included" part of the original mask. The final output image has a smooth overall blend because we blend each band of frequencies through the Laplacian stack. We normalize the result for the final output.
 
-All of these blends are done with 8 stack layers. The parameters used for generating the Gaussian stack (and therefore the Laplacian stack) for each image are stated in the caption under each image.
+All of these blends are done with 8 stack layers. The parameters used for generating the Gaussian stack (and therefore the Laplacian stack) are stated in the caption under each image.
 
 In the images below, we added a red border around the masks to better show where the white part of the mask is.
 
@@ -326,9 +326,9 @@ In the images below, we added a red border around the masks to better show where
 
     <div style="text-align: center;">
         <img src="images/part2_4/oraple_mask.jpg" alt="img" style="width: 100%; height: auto; display: block; border: 2px solid red;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">
-        Initial blurring Gaussian kernel size 51, stdev 16 <br>
-        Gaussian stack kernel size 31, stdev 15</p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> Vertical mask <br>
+        Gaussian stack kernel size 31 <br>
+        stdev 15</p>
     </div>
 
     <div style="text-align: center;">
@@ -353,8 +353,8 @@ In the images below, we added a red border around the masks to better show where
     <div style="text-align: center;">
         <img src="images/part2_4/flower_city_mask.jpg" alt="img" style="width: 100%; height: auto; display: block; border: 2px solid red;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">
-        Initial blurring Gaussian kernel size 15, stdev 2 <br>
-        Gaussian stack kernel size 7, stdev 2</p>
+        Horizontal mask <br>
+        Gaussian stack kernel size 7 <br> stdev 2</p>
     </div>
 
     <div style="text-align: center;">
@@ -363,7 +363,7 @@ In the images below, we added a red border around the masks to better show where
     </div>
 </div>
 
-Here are the Laplacian stack images for the flower city. These are levels 0, 2, 4, 6, and 7 of the Laplacian stacks, where we use a total of 8 layers (so layer 7 is the last).
+Here are the Laplacian stack images for the flower city. These are levels 0, 2, 4, 6, and 7 of the Laplacian stacks, where we use a total of 8 layers (so layer 7 is the last). From left to right, the columns are: 
 
 <div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
@@ -378,25 +378,25 @@ For my irregular mask, I blended a rubber duck's head with a real duck.
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/part2_4/rubber_duck.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original rubber duck</p>
-    </div>
-
-    <div style="text-align: center;">
         <img src="images/part2_4/real_duck.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original real duck</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part2_4/aligned_rubber.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Aligned rubber duck <br>
-        Gaussian stack kernel size 7 <br>
-        stdev 2</p>
+        <img src="images/part2_4/rubber_duck.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original rubber duck</p>
     </div>
 
     <div style="text-align: center;">
         <img src="images/part2_4/aligned_real.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Aligned real duck <br>
+        Gaussian stack kernel size 7 <br>
+        stdev 2</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_4/aligned_rubber.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Aligned rubber duck <br>
         Gaussian stack kernel size 7 <br>
         stdev 2</p>
     </div>
