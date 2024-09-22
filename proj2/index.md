@@ -96,7 +96,7 @@ For my dog image, we used Gaussian kernel size 9, Gaussian standard deviation 1.
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part2_12/taj_7_1_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part2_1/taj_7_1_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Sharpened Taj Mahal image </p>
     </div>
 
@@ -111,7 +111,7 @@ For my dog image, we used Gaussian kernel size 9, Gaussian standard deviation 1.
     </div>
 </div>
 
-We blur the sharpened dog image and attempt to resharpen it afterwards. To blur, we used Gaussian kernel size 5 and standard deviation 1. To resharpen, we used Gaussian kernel size 7, Gaussian standard deviation 1, and `alpha=2`.
+We blur the sharpened dog image and attempt to resharpen it afterwards. To blur, we used Gaussian kernel size 5 and standard deviation 1. To resharpen, we used Gaussian kernel size 7, Gaussian standard deviation 1, and `alpha = 2`.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
@@ -129,7 +129,125 @@ We blur the sharpened dog image and attempt to resharpen it afterwards. To blur,
 We can see that although some features in the resharpened image look sharpened compared to the original dog image, there are many edges and details that are still blurred. This is because blurring the sharpened image removes the high frequency content. When we try to sharpen the image after blurring, there is not as much high frequency content to add back to the image, so the standard sharpening process does not work properly.
 
 ### Part 2.2: Hybrid Images
+We create hybrid images by combining the low frequencies of one image with the high frequencies of another image. This allows the hybrid image to show the high-frequency image when the viewer is close, and it shows the low-frequency image when the viewer is farther away.
 
+To get the low frequency image, we apply a Gaussian blur. To get the high frequency image, we apply a Gaussian blur, and then do `details = original - blurred`. We then average the low and high frequency images to obtain the final hybrid image.
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="font-weight: bold;">Low Frequency Image</div>
+    <div style="font-weight: bold;">High Frequency Image</div>
+    <div style="font-weight: bold;">Hybrid Image</div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/derek.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Derek </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/nutmeg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Nutmeg </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/derek_nutmeg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">
+        Low frequency: kernel size 41, stdev 6 <br>
+        High frequency: kernel size 55, stdev 7</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/smiski_researching.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Smiski researching</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/smiski_presenting.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Smiski presenting </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/smiski_gray.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">
+        Low frequency: kernel size 41, stdev 6 <br>
+        High frequency: kernel size 15, stdev 2.5</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/leafeon.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Leafeon (Pokemon)</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/sylveon.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Sylveon (Pokemon)</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/eevee_gray.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">
+        Low frequency: kernel size 41, stdev 6 <br>
+        High frequency: kernel size 15, stdev 2</p>
+    </div>
+</div>
+
+For the Smiskis, the eyes of the high-frequency Smiski still show up pretty clearly even when looking at the hybrid image from far away, since the eyes are very dark compared to the rest of the Smiski's face and body. Otherwise, the hybrid images seem to work.
+
+For a failure case, we tried to make a hybrid of a paper crane and a real crane.
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="font-weight: bold;">Low Frequency Image</div>
+    <div style="font-weight: bold;">High Frequency Image</div>
+    <div style="font-weight: bold;">Hybrid Image</div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/paper_crane.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Derek </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/real_crane.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Nutmeg </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/hybrid_crane_fail.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">
+        Low frequency: kernel size 41, stdev 6 <br>
+        High frequency: kernel size 35, stdev 5</p>
+    </div>
+</div>
+
+The crane hybrid does not really work because the dark lines of the paper crane are still very visible when viewing the image up close. These are high frequency components that don't get blurred out enough by the Gaussian filter.
+
+### Bells and Whistles: Color
+I tried using color on the Leafeon/Sylveon hybrid to see if color would enhance the hybrid effect.
+
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/eevee_gray.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Both grayscale </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/hybrid_leafeon_color.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Leafeon color, Sylveon grayscale </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/hybrid_sylveon_color.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Leafeon grayscale, Sylveon color</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_2/eevee_color.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Both color</p>
+    </div>
+</div>
+
+Color does not seem to enhance the effect very much. In particular, using color for the high frequency image seems insignificant, since the process of subtracting the blurred image from the original already removes so much of the image's color. Using color for the low frequency image does not seem to make the hybrid effect better than just using grayscale.
 
 ### Part 2.3: Gaussian and Laplacian Stacks
 
