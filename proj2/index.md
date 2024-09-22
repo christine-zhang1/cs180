@@ -195,7 +195,7 @@ For the Smiskis, the eyes of the high-frequency Smiski still show up pretty clea
 
 For a failure case, we tried to make a hybrid of a paper crane and a real crane.
 
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="font-weight: bold;">Low Frequency Image</div>
     <div style="font-weight: bold;">High Frequency Image</div>
@@ -224,7 +224,7 @@ The crane hybrid does not really work because the dark lines of the paper crane 
 ### Bells and Whistles: Color
 I tried using color on the Leafeon/Sylveon hybrid to see if color would enhance the hybrid effect.
 
-<div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
         <img src="images/part2_2/eevee_gray.jpg" alt="img" style="width: 100%; height: auto; display: block;">
