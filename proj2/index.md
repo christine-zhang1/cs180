@@ -333,7 +333,9 @@ In the images below, we added a red border around the masks to better show where
 
     <div style="text-align: center;">
         <img src="images/part2_4/oraple.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Blend <br>
+        Apple <br>
+        Orange</p>
     </div>
 
     <div style="text-align: center;">
@@ -359,11 +361,13 @@ In the images below, we added a red border around the masks to better show where
 
     <div style="text-align: center;">
         <img src="images/part2_4/flower_city.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Blend <br>
+        New York City <br>
+        Flower field</p>
     </div>
 </div>
 
-Here are the Laplacian stack images for the flower city. These are levels 0, 2, 4, 6, and 7 of the Laplacian stacks, where we use a total of 8 layers (so layer 7 is the last). From left to right, the columns are: 
+Here are the Laplacian stack images for the flower city. These are levels 0, 2, 4, 6, and 7 of the Laplacian stacks, where we use a total of 8 layers (so layer 7 is the last). From left to right, the columns are: city, flower field, masked city, masked flower field, combined masked city + masked flower field.
 
 <div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
@@ -403,7 +407,7 @@ For my irregular mask, I blended a rubber duck's head with a real duck.
 
     <div style="text-align: center;">
         <img src="images/part2_4/aligned_mask.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Initial blurring Gaussian kernel size 21, stdev 3 <br>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Irregular mask <br>
         Gaussian stack kernel size 31, stdev 9</p>
     </div>
 
