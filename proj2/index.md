@@ -284,7 +284,7 @@ We create Gaussian and Laplacian stacks for both the apple and orange images. At
 
 Here are levels 0, 2, 4, 6, and 7 of my Laplacian stack, where we use a total of 8 layers (so layer 7 is the last). These levels are shown from top to bottom. From left to right, the columns are: apple, orange, masked apple, masked orange, combined masked apple + masked orange.
 
-<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-gap: 10px; padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
         <img src="images/part2_3/laplacians_oraple.png" alt="img" style="width: 100%; height: auto; display: block;">
@@ -367,7 +367,7 @@ In the images below, we added a red border around the masks to better show where
 
 Here are the Laplacian stack images for the flower city. These are levels 0, 2, 4, 6, and 7 of the Laplacian stacks, where we use a total of 8 layers (so layer 7 is the last). From left to right, the columns are: city, flower field, masked city, masked flower field, combined masked city + masked flower field.
 
-<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-gap: 10px; padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
         <img src="images/part2_4/flower_city_laplacian.png" alt="img" style="width: 100%; height: auto; display: block;">
