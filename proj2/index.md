@@ -167,7 +167,7 @@ To get the low frequency image, we apply a Gaussian blur. To get the high freque
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part2_2/smiski_gray.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part2_2/smiski_gray.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">
         Low frequency: kernel size 41, stdev 6 <br>
         High frequency: kernel size 15, stdev 2.5</p>
@@ -184,7 +184,7 @@ To get the low frequency image, we apply a Gaussian blur. To get the high freque
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part2_2/eevee_gray.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part2_2/eevee_gray.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">
         Low frequency: kernel size 41, stdev 6 <br>
         High frequency: kernel size 15, stdev 2</p>
@@ -250,6 +250,7 @@ I tried using color on the Leafeon/Sylveon hybrid to see if color would enhance 
 Color does not seem to enhance the effect very much. In particular, using color for the high frequency image seems insignificant, since the process of subtracting the blurred image from the original already removes so much of the image's color. Using color for the low frequency image does not seem to make the hybrid effect better than just using grayscale.
 
 ### Part 2.3: Gaussian and Laplacian Stacks
+
 
 ### Part 2.4: Multiresolution Blending
 
