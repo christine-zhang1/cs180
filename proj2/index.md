@@ -216,7 +216,9 @@ We do Fourier analyis on the Leafeon/Sylveon hybrid.
         <img src="images/part2_2/high_sylveon.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">High frequency Sylveon FFT</p>
     </div>
+</div>
 
+<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
         <img src="images/part2_2/hybrid_eevee_fft.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Hybrid image FFT</p>
@@ -282,7 +284,7 @@ Color does not seem to enhance the effect very much. In particular, using color 
 ### Part 2.3: Gaussian and Laplacian Stacks
 We create Gaussian and Laplacian stacks for both the apple and orange images. At every level of the Gaussian stack, we use a Gaussian kernel to blur the previous level to get the current level's output, which maintains the image's size across all levels of the stack. Each level of the Laplacian stack except for the last level is calculated from the Gaussian stack using `l_stack[i] = g_stack[i] - g_stack[i+1]`. For the last level of the Laplacian stack, we directly use the result from the last level of the Gaussian stack. This means that both stacks end up with the same number of images.
 
-Here are levels 0, 2, 4, 6, and 7 of my Laplacian stack, where I used a total of 8 layers (so layer 7 is the last). These levels are shown from top to bottom, with the apple images on the left column and the orange on the right.
+Here are levels 0, 2, 4, 6, and 7 of my Laplacian stack, where I used a total of 8 layers (so layer 7 is the last). These levels are shown from top to bottom, with the apple images on the left column and the orange on the right. I used 
 
 <div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
@@ -292,7 +294,47 @@ Here are levels 0, 2, 4, 6, and 7 of my Laplacian stack, where I used a total of
     </div>
 </div>
 
+Each Laplacian stack image shown here is normalized (over the entire image, not by channel), but when doing the multiresolution blending, we use the un-normalized version of the Laplacian stack outputs.
+
 ### Part 2.4: Multiresolution Blending
+To blend two images `A` and `B` together, we generate the Laplacian stacks for each of these images `A_lstack` and `B_lstack`. We also generate a Gaussian stack for the mask `mask_gstack` after initially blurring the mask to soften the abrupt mask edges. To combine the images with a smooth blend, we compute `(1 - mask_gstack[i]) * A_lstack[i] + mask_gstack[i] * B_lstack[i]` for each level `i` in the respective stack, and we add all of these contributions together. This works because `(1 - mask_gstack[i])` reverses the mask, so the contribution from `A` is the "excluded" part of the original mask and the contribution from `B` in the "included" part of the original mask. We create the smooth overall blend on the final output image by blending each band of frequencies through the Laplacian stack. We normalize the result for the final output.
+
+All of these blends are done with 8 stack layers. The parameters used for generating the Gaussian stack (and therefore the Laplacian stack) for each image are stated in the caption under each image.
+
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="font-weight: bold;">Image 1</div>
+    <div style="font-weight: bold;">Image 2</div>
+    <div style="font-weight: bold;">Mask</div>
+    <div style="font-weight: bold;">Blended image</div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_4/apple.jpeg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Apple <br>
+        Gaussian stack kernel size 7 <br>
+        stdev 2</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_4/orange.jpeg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Orange <br>
+        Gaussian stack kernel size 7 <br>
+        stdev 2</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_4/hybrid_sylveon_color.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Vertical Mask<br>
+        Initial blurring Gaussian kernel size 51, stdev 16 <br>
+        Gaussian stack kernel size 31, stdev 15</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/part2_4/oraple.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
+
 
 
 Here are some images generated with this approach.
