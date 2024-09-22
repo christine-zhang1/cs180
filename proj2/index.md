@@ -408,11 +408,17 @@ For my irregular mask, I blended a rubber duck's head with a real duck.
     <div style="text-align: center;">
         <img src="images/part2_4/aligned_mask.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Irregular mask <br>
-        Gaussian stack kernel size 31, stdev 9</p>
+        Gaussian stack kernel size 31 <br>
+        stdev 9</p>
     </div>
 
     <div style="text-align: center;">
         <img src="images/part2_4/duck_blend.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Duck blend</p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Blend <br>
+        Real duck <br>
+        Rubber duck</p>
     </div>
+
+## Reflection
+ The most important thing I learned during this project was how different frequencies in images affect our perception of those images. It was fun playing around with frequencies to blend images together, and I liked creating hybrid images that showed me how we see high frequencies close up and low frequencies from far away. I learned a lot about how changing frequencies can impact what we see in images.
 </div>
