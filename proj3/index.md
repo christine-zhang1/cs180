@@ -9,8 +9,18 @@ I wanted to morph myself and my friend Kerrine. I used the provided [labeling to
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
+        <img src="images/cz_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me (Christine) </p>
+    </div>
+    
+    <div style="text-align: center;">
         <img src="images/cz_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">My face with correspondence points </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/kt_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">My friend Kerrine </p>
     </div>
 
     <div style="text-align: center;">
@@ -35,104 +45,45 @@ I then took the average of our correspondence points and used `scipy.spatial.Del
 </div>
 
 ## Part 2: Computing the Mid-Way Face
-To compute the mid-way face, I used the following process:
+To compute the mid-way face using `warp_frac=0.5` and `dissolve_frac=0.5`, I used the following process:
 
-1. 
+1. Calculate the average points using `(1-warp_frac) * points1 + warp_frac * points2`.
+2. Get the Delaunay triangulation of the average points.
+3. For each triangle, compute an affine transformation matrix between that triangle in each of the original images and its corresponding triangle in the Delaunay average triangulation. This matrix is used for warping the images.
+4. Get the average triangle's pixels using `skimage.draw.polygon`.
+5. Find the pixels in each of the original images corresponding to the average triangle by taking the inverse of the affine transformation matrix computed in step 3.
+6. Cross dissolve these pixels to get the final face image using `(1-dissolve_frac) * img1[y1, x1] + dissolve_frac * img2[y2, x2]`.
 
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/part1/gaussian_grad_mag.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gradient magnitude </p>
+        <img src="images/cz_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me (Christine) </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part1/gaussian_grad_mag_binary_thresh01.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Binarized gradient magnitude with threshold 0.1 </p>
+        <img src="images/kt_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">My friend Kerrine </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/midway_face.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mid-way face </p>
     </div>
 </div>
 
-Comparing this to the results in part 1.1, we see that these images are much less noisy, and the edges in the image appear more clear, thick, and rounded. The noisy edges at the bottom of the image are also gone. This is because the blurring the initial image removes the high frequency components of the image since the Gaussian filter is a low pass filter. This eliminates noise and causes edge detection to be more accurate.
+## Part 3: The Morph Sequence
+I created the morph sequence by varying `warp_frac` and `dissolve_frac` from 0 to 1 in the procedure described above. `warp_frac = dissolve_frac = 0` is my face, and `warp_frac = dissolve_frac = 1` is Kerrine's face.
 
-We check that we get the same results by convolving the gaussian with `D_x` and `D_y` first.
-
-<div style="display: grid; grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/part1/gaussian_filters.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/morph_sequence.gif" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
 
-We convolve these "derivative of Gaussian" filters with our original image (unblurred) to get the images below.
-
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="text-align: center;">
-        <img src="images/part1/gaussian_grad_mag_dog.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gradient magnitude </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part1/gaussian_grad_mag_binary_thresh01_dog.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Binarized gradient magnitude with threshold 0.1 </p>
-    </div>
-</div>
-
-The images look almost exactly the same as the images we got after blurring the image and then applying `D_x` and `D_y`, so these two techniques have the same effect.
-
-## Part 2.1: Image "Sharpening"
-
-We "sharpen" an image following this procedure:
-1. Convolve the image with a Gaussian kernel to get the low frequencies of the image
-2. Calculate the high frequencies using `details = original - blurred`
-3. Get the sharpened image using `sharpened = original + alpha * details`
-
-For the Taj Mahal image, we used a Gaussian kernel size 7, Gaussian standard deviation 1, and `alpha = 2`.
-
-For the dog image, we used Gaussian kernel size 9, Gaussian standard deviation 1.5, and `alpha = 2`.
-
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="text-align: center;">
-        <img src="images/part2_1/taj.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original Taj Mahal image</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_1/taj_7_1_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Sharpened Taj Mahal image </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_1/dog.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original dog image</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_1/dog_9_15_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Sharpened dog image </p>
-    </div>
-</div>
-
-We blur the sharpened dog image and attempt to resharpen it afterwards. To blur, we used Gaussian kernel size 5 and standard deviation 1. To resharpen, we used Gaussian kernel size 7, Gaussian standard deviation 1, and `alpha = 2`.
-
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="text-align: center;">
-        <img src="images/part2_1/dog_sharpened_blurred.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Blurred sharpened dog image</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_1/dog_resharpened_2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Resharpened dog image </p>
-    </div>
-</div>
-
-Some features in the resharpened image look sharpened compared to the original dog image, such as the cracks in the ground and the stairs in the background. However, there are many edges and details that still appear blurred, such as the dog's fur. This is because blurring the sharpened image removes the high frequency content. When we try to sharpen the image after blurring, there is not as much high frequency content to add back to the image, so the standard sharpening process does not work properly.
-
-## Part 2.2: Hybrid Images
+## Part 4: The Mean Face of a Population
 We create hybrid images by combining the low frequencies of one image with the high frequencies of another image. This allows the hybrid image to show the high-frequency image when the viewer is close, and it shows the low-frequency image when the viewer is farther away.
 
 To get the low frequency image, we apply a Gaussian blur. To get the high frequency image, we apply a Gaussian blur and then calculate `details = original - blurred`, and we use `details` as the high frequencies. We then average the low and high frequency images pixel-wise to obtain the final hybrid image.
