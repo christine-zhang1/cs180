@@ -9,18 +9,18 @@ I wanted to morph myself and my friend Kerrine. I used the provided [labeling to
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/cz_cropped.jpg" alt="img" style="width: 75%; height: auto; display: block;">
+        <img src="images/cz_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me (Christine) </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/kt_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">My friend Kerrine </p>
     </div>
     
     <div style="text-align: center;">
         <img src="images/cz_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">My face with correspondence points </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/kt_cropped.jpg" alt="img" style="width: 75%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">My friend Kerrine </p>
     </div>
 
     <div style="text-align: center;">
@@ -58,7 +58,7 @@ To compute the mid-way face using `warp_frac=0.5` and `dissolve_frac=0.5`, I use
 
     <div style="text-align: center;">
         <img src="images/cz_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me (Christine) </p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me </p>
     </div>
 
     <div style="text-align: center;">
