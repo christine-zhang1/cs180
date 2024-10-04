@@ -9,7 +9,7 @@ I wanted to morph myself and my friend Kerrine. I used the provided [labeling to
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/cz_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/cz_cropped.jpg" alt="img" style="width: 75%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me (Christine) </p>
     </div>
     
@@ -19,7 +19,7 @@ I wanted to morph myself and my friend Kerrine. I used the provided [labeling to
     </div>
 
     <div style="text-align: center;">
-        <img src="images/kt_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/kt_cropped.jpg" alt="img" style="width: 75%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">My friend Kerrine </p>
     </div>
 
@@ -75,7 +75,7 @@ To compute the mid-way face using `warp_frac=0.5` and `dissolve_frac=0.5`, I use
 ## Part 3: The Morph Sequence
 I created the morph sequence by varying `warp_frac` and `dissolve_frac` from 0 to 1 in the procedure described above. `warp_frac = dissolve_frac = 0` is my face, and `warp_frac = dissolve_frac = 1` is Kerrine's face.
 
-<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
         <img src="images/morph_sequence.gif" alt="img" style="width: 100%; height: auto; display: block;">
