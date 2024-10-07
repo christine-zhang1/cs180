@@ -27,6 +27,16 @@ I wanted to morph myself and my friend Kerrine. I used the provided [labeling to
         <img src="images/kt_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Kerrine's face with correspondence points </p>
     </div>
+
+    <div style="text-align: center;">
+        <img src="images/cz_tri.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">My face with triangulation </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/kt_tri.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Kerrine's face with triangulation </p>
+    </div>
 </div>
 
 I then took the average of our correspondence points and used `scipy.spatial.Delaunay` to compute the Delaunay triangulation of the average correspondence points. The resulting triangulation imposed on our faces is shown below.
@@ -239,10 +249,12 @@ I created a caricature of my face by calculating extrapolated correspondence poi
     </div>
 </div>
 
+The top left of my face at the hairline has some artifacts. This is likely because the point labeling on the FEI dataset does not have any points on the forehead or hairline, so it is not warped as cleanly as the rest of the face.
+
 ## Bells and Whistles: Principal Component Analysis
 I took each `m x n` image and represented it as a vector of length `m * n` (for the FEI dataset, this was `300 * 250`). The entire dataset can then be represented as a `k x (m * n)` matrix, where `k` is the number of images in the dataset. I performed PCA on this matrix using `sklearn.decomposition.PCA` to obtain the eigenfaces for the FEI dataset.
 
-Here are the eigenfaces in order of decreasing eigenvalue for both the neutral and smiling faces.
+Here are the eigenfaces in order of decreasing eigenvalue for the neutral and smiling faces.
 
 <div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
 
@@ -322,4 +334,4 @@ Here are some newly generated smiling faces.
     </div>
 </div>
 
-In these images, we can see that the mouth area is a bit blurry. I think this is because the smiling faces have more variation in where the mouth is compared to the neutral faces, so the first 32 components of the PCA basis are unable to capture this information as accurately for the smiling faces. Otherwise, the images still look fairly realistic.
+In these images, we can see that the mouth area is a bit blurry. I think this is because the smiling faces have more variation in where the mouth is compared to the neutral faces, so the first 32 components of the PCA basis are unable to capture this information as accurately for the smiling faces. Otherwise, the images look fairly realistic.
