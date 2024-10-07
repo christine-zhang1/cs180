@@ -105,7 +105,7 @@ These photos are spatially normalized. The database also contains annotations of
 
 To compute the mean neutral and mean smiling face of the population, I used the following procedure:
 
-1. Get the average face shape by taking the average of the 46 correspondence points across all 200 images.
+1. Get the average face shape by taking the average of the 46 correspondence points across all 200 images. Add the four corners of the image dimensions as 4 extra correspondence points.
 2. Warp each face into the average face shape using the procedure from part 2, but instead of having a second face image as the target, use the average shape correspondence points.
 3. Take the average color of all the warped images to get the final mean face image.
 
@@ -190,12 +190,12 @@ Here are some of the dataset faces warped into the average face.
     </div>
 </div>
 
-Here is my face warped into the average geometry as well as the average face warped into my geometry.
+Here is my face warped into the average geometry as well as the average face warped into my geometry. I labeled points on my face in the same order and location as the correspondence points in the FEI dataset.
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/cz_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/cz_face_resized.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me</p>
     </div>
 
@@ -224,21 +224,22 @@ Here is my face warped into the average geometry as well as the average face war
 </div>
 
 ## Part 5: Caricatures — Extrapolating from the Mean
-We create Gaussian and Laplacian stacks for both the apple and orange images. At every level of the Gaussian stack, we use a Gaussian kernel to blur the previous level to get the current level's output, which maintains the image's size across all levels of the stack. Each level of the Laplacian stack except for the last level is calculated from the Gaussian stack using `l_stack[i] = g_stack[i] - g_stack[i+1]`. For the last level of the Laplacian stack, we directly use the result from the last level of the Gaussian stack. This means that both stacks end up with the same number of images.
+I created a caricature of my face by calculating extrapolated correspondence points and warping my face to the triangulation formed by those points. I computed `p + 1.4(q - p)` for the extrapolated correspondence points, where `p` denotes the correspondence points on my face and `q` denotes the correspondence points on the mean face of the FEI dataset.
 
-Here are levels 0, 2, 4, 6, and 7 of my Laplacian stack, where we use a total of 8 layers (so layer 7 is the last). These levels are shown from top to bottom. From left to right, the columns are: apple, orange, masked apple, masked orange, combined masked apple + masked orange.
-
-<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/part2_3/laplacians_oraple.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images/cz_warp_to_avg_neutral_extra_1_4.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">My caricature using mean neutral face</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/cz_warp_to_avg_smiling_extra_1_4.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">My caricature using mean smiling face</p>
     </div>
 </div>
 
-Each Laplacian stack image shown here is normalized (over the entire image, not by channel). However, when doing the multiresolution blending, we use the un-normalized versions of the Laplacian stack outputs.
-
-## Part 2.4: Multiresolution Blending
+## Bells and Whistles: Principal Component Analysis
 To blend two images `A` and `B` together, we generate the Laplacian stacks for each of these images `A_lstack` and `B_lstack`. We also generate a Gaussian stack for the mask `mask_gstack`. To combine the images with a smooth blend, we compute `(1 - mask_gstack[i]) * A_lstack[i] + mask_gstack[i] * B_lstack[i]` for each level `i` in the respective stack, and we add all of these contributions together. This works because `1 - mask_gstack[i]` reverses the mask, so the contribution from `A` is the "excluded" part of the original mask and the contribution from `B` is the "included" part of the original mask. The final output image has a smooth overall blend because we blend each band of frequencies through the Laplacian stack. We normalize the result for the final output.
 
 All of these blends are done with 8 stack layers. The parameters used for generating the Gaussian stack (and therefore the Laplacian stack) are stated in the caption under each image.
