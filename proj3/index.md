@@ -240,128 +240,86 @@ I created a caricature of my face by calculating extrapolated correspondence poi
 </div>
 
 ## Bells and Whistles: Principal Component Analysis
-To blend two images `A` and `B` together, we generate the Laplacian stacks for each of these images `A_lstack` and `B_lstack`. We also generate a Gaussian stack for the mask `mask_gstack`. To combine the images with a smooth blend, we compute `(1 - mask_gstack[i]) * A_lstack[i] + mask_gstack[i] * B_lstack[i]` for each level `i` in the respective stack, and we add all of these contributions together. This works because `1 - mask_gstack[i]` reverses the mask, so the contribution from `A` is the "excluded" part of the original mask and the contribution from `B` is the "included" part of the original mask. The final output image has a smooth overall blend because we blend each band of frequencies through the Laplacian stack. We normalize the result for the final output.
+I took each `m x n` image and represented it as a vector of length `m * n` (for the FEI dataset, this was `300 * 250`). The entire dataset can then be represented as a `k x (m * n)` matrix, where `k` is the number of images in the dataset. I performed PCA on this matrix using `sklearn.decomposition.PCA` to obtain the eigenfaces for the FEI dataset.
 
-All of these blends are done with 8 stack layers. The parameters used for generating the Gaussian stack (and therefore the Laplacian stack) are stated in the caption under each image.
-
-In the images below, we added a red border around the masks to better show where the white part of the mask is.
-
-<div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="font-weight: bold;">Image 1</div>
-    <div style="font-weight: bold;">Image 2</div>
-    <div style="font-weight: bold;">Mask</div>
-    <div style="font-weight: bold;">Blended image</div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_4/apple.jpeg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Apple <br>
-        Gaussian stack kernel size 7 <br>
-        stdev 2</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_4/orange.jpeg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Orange <br>
-        Gaussian stack kernel size 7 <br>
-        stdev 2</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_4/oraple_mask.jpg" alt="img" style="width: 100%; height: auto; display: block; border: 2px solid red;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> Vertical mask <br>
-        Gaussian stack kernel size 31 <br>
-        stdev 15</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_4/oraple.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Blend <br>
-        Apple <br>
-        Orange</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_4/nyc.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">New York City <br>
-        Gaussian stack kernel size 7 <br>
-        stdev 2</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_4/flower.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Flower field <br>
-        Gaussian stack kernel size 7 <br>
-        stdev 2</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_4/flower_city_mask.jpg" alt="img" style="width: 100%; height: auto; display: block; border: 2px solid red;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">
-        Horizontal mask <br>
-        Gaussian stack kernel size 7 <br> stdev 2</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_4/flower_city.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Blend <br>
-        New York City <br>
-        Flower field</p>
-    </div>
-</div>
-
-Here are the Laplacian stack images for the flower city. These are levels 0, 2, 4, 6, and 7 of the Laplacian stacks, where we use a total of 8 layers (so layer 7 is the last). From left to right, the columns are: city, flower field, masked city, masked flower field, combined masked city + masked flower field.
+Here are the eigenfaces in order of decreasing eigenvalue for both the neutral and smiling faces.
 
 <div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/part2_4/flower_city_laplacian.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/eigenfaces_neutral.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Neutral eigenfaces</p>
+    </div>
+</div>
+
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/eigenfaces_smiling.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Smiling eigenfaces</p>
+    </div>
+</div>
+
+I used the eigenface basis to generate some new face images. I multiplied each of the first 32 eigenfaces by a random weight in the range `(-1, 1)` and normalized the result to obtain a new face.
+
+Here are some newly generated neutral faces.
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/pca_rand_face_neutral2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/pca_rand_face_neutral4.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/pca_rand_face_neutral5.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
 
-For my irregular mask, I blended a rubber duck's head with a real duck.
+Some of the results were pretty discolored due to the random weights that were chosen. Here are some randomly generated neutral faces that don't look as good.
 
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/part2_4/real_duck.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original real duck</p>
+        <img src="images/pca_rand_face_neutral3.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part2_4/rubber_duck.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original rubber duck</p>
+        <img src="images/pca_rand_face_neutral6.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part2_4/aligned_real.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Aligned real duck <br>
-        Gaussian stack kernel size 7 <br>
-        stdev 2</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_4/aligned_rubber.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Aligned rubber duck <br>
-        Gaussian stack kernel size 7 <br>
-        stdev 2</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_4/aligned_mask.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Irregular mask <br>
-        Gaussian stack kernel size 31 <br>
-        stdev 9</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_4/duck_blend.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Blend <br>
-        Real duck <br>
-        Rubber duck</p>
+        <img src="images/pca_rand_face_neutral7.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
 
-## Reflection
- The most important thing I learned during this project was how different frequencies in images affect our perception of those images. It was fun playing around with frequencies to blend images together, and I liked creating hybrid images that showed me how we see high frequencies close up and low frequencies from far away. I learned a lot about how changing frequencies can impact what we see in images.
+Here are some newly generated smiling faces.
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/pca_rand_face_smiling2.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/pca_rand_face_smiling4.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/pca_rand_face_smiling6.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
+
+In these images, we can see that the mouth area is a bit blurry. I think this is because the smiling faces have more variation in where the mouth is compared to the neutral faces, so the first 32 components of the PCA basis are unable to capture this information as accurately for the smiling faces. Otherwise, the images still look fairly realistic.
