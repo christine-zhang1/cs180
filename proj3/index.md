@@ -30,12 +30,12 @@ I wanted to morph myself and my friend Kerrine. I used the provided [labeling to
 
     <div style="text-align: center;">
         <img src="images/cz_tri.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">My face with triangulation </p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me with my triangulation </p>
     </div>
 
     <div style="text-align: center;">
         <img src="images/kt_tri.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Kerrine's face with triangulation </p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Kerrine's face with her triangulation </p>
     </div>
 </div>
 
