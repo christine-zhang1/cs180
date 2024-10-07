@@ -84,159 +84,146 @@ I created the morph sequence by varying `warp_frac` and `dissolve_frac` from 0 t
 </div>
 
 ## Part 4: The Mean Face of a Population
-We create hybrid images by combining the low frequencies of one image with the high frequencies of another image. This allows the hybrid image to show the high-frequency image when the viewer is close, and it shows the low-frequency image when the viewer is farther away.
+I used photographs from the [FEI Face Database](https://fei.edu.br/~cet/facedatabase.html), which contains images of 200 individuals' faces taken at the Artificial Intelligence Laboratory of FEI in São Bernardo do Campo, São Paulo, Brazil. There are 100 male and 100 female subjects, with ages ranging from 19 to 40 years. Each individual has a neutral face image and a smiling face image.
 
-To get the low frequency image, we apply a Gaussian blur. To get the high frequency image, we apply a Gaussian blur and then calculate `details = original - blurred`, and we use `details` as the high frequencies. We then average the low and high frequency images pixel-wise to obtain the final hybrid image.
-
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="font-weight: bold;">Low Frequency Image</div>
-    <div style="font-weight: bold;">High Frequency Image</div>
-    <div style="font-weight: bold;">Hybrid Image</div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/derek.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Derek </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/nutmeg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Nutmeg </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/derek_nutmeg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">
-        Low frequency: kernel size 41, stdev 6 <br>
-        High frequency: kernel size 55, stdev 7</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/smiski_researching.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Smiski researching</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/smiski_presenting.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Smiski presenting </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/smiski_gray.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">
-        Low frequency: kernel size 41, stdev 6 <br>
-        High frequency: kernel size 15, stdev 2.5</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/leafeon.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Leafeon (Pokemon)</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/sylveon.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Sylveon (Pokemon)</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/eevee_gray.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">
-        Low frequency: kernel size 41, stdev 6 <br>
-        High frequency: kernel size 15, stdev 2</p>
-    </div>
-</div>
-
-For the Smiskis, the eyes of the high-frequency Smiski still show up pretty clearly even when looking at the hybrid image from far away, since the eyes are very dark compared to the rest of the Smiski's face and body. Otherwise, the hybrid images seem to work.
-
-We do Fourier analyis on the Leafeon/Sylveon hybrid.
+Here are the images of person 1 in the dataset.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/part2_2/leafeon_fft.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Leafeon FFT</p>
+        <img src="images/1a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Neutral </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part2_2/sylveon_fft.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Sylveon FFT </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/low_leafeon.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Low frequency Leafeon FFT</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/high_sylveon.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">High frequency Sylveon FFT</p>
+        <img src="images/1b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Smiling </p>
     </div>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-    <div style="text-align: center;">
-        <img src="images/part2_2/hybrid_eevee_fft.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Hybrid image FFT</p>
-    </div>
-</div>
+These photos are spatially normalized. The database also contains annotations of these faces with 46 correspondence points.
 
-For a failure case, we try to make a hybrid of a paper crane and a real crane.
+To compute the mean neutral and mean smiling face of the population, I used the following procedure:
 
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="font-weight: bold;">Low Frequency Image</div>
-    <div style="font-weight: bold;">High Frequency Image</div>
-    <div style="font-weight: bold;">Hybrid Image</div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/paper_crane.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Paper crane </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/real_crane.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Real crane </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/hybrid_crane_fail.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">
-        Low frequency: kernel size 41, stdev 6 <br>
-        High frequency: kernel size 35, stdev 5</p>
-    </div>
-</div>
-
-The crane hybrid does not really work because the dark lines of the paper crane are still very visible when viewing the image up close. These are high frequency components that don't get blurred out enough by the Gaussian filter.
-
-### Bells and Whistles: Color
-We try using color on the Leafeon/Sylveon hybrid to see if color will enhance the hybrid effect.
+1. Get the average face shape by taking the average of the 46 correspondence points across all 200 images.
+2. Warp each face into the average face shape using the procedure from part 2, but instead of having a second face image as the target, use the average shape correspondence points.
+3. Take the average color of all the warped images to get the final mean face image.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/part2_2/eevee_gray.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Both grayscale </p>
+        <img src="images/avg_result_neutral.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mean neutral face</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part2_2/hybrid_leafeon_color.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Leafeon color, Sylveon grayscale </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/hybrid_sylveon_color.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Leafeon grayscale, Sylveon color</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part2_2/eevee_color.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Both color</p>
+        <img src="images/avg_result_smiling.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mean smiling face</p>
     </div>
 </div>
 
-Color does not seem to enhance the effect very much. In particular, using color for the high frequency image seems insignificant, since the process of subtracting the blurred image from the original already removes so much of the image's color. Using color for the low frequency image does not seem to make the hybrid effect better than just using grayscale.
+Here are some of the dataset faces warped into the average face.
 
-## Part 2.3: Gaussian and Laplacian Stacks
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="font-weight: bold;">Original image</div>
+    <div style="font-weight: bold;">Warped to average</div>
+
+    <div style="text-align: center;">
+        <img src="images/88a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 88, neutral </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/88a_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 88, warped to mean neutral </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/156a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 156, neutral</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/156a_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 156, warped to mean neutral </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/188a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 188, neutral</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/188a_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 188, warped to mean neutral </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/88b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 88, smiling </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/88b_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 88, warped to mean smiling </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/156b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 156, smiling</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/156b_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 156, warped to mean smiling </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/188b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 188, smiling</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/188b_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 188, warped to mean smiling </p>
+    </div>
+</div>
+
+Here is my face warped into the average geometry as well as the average face warped into my geometry.
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/cz_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/cz_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me warped to mean neutral face </p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/cz_warp_to_avg_smiling.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me warped to mean smiling face</p>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/avg_warp_to_cz.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mean neutral face warped to my geometry</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/avg_warp_to_cz_smiling.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mean smiling face warped to my geometry</p>
+    </div>
+</div>
+
+## Part 5: Caricatures — Extrapolating from the Mean
 We create Gaussian and Laplacian stacks for both the apple and orange images. At every level of the Gaussian stack, we use a Gaussian kernel to blur the previous level to get the current level's output, which maintains the image's size across all levels of the stack. Each level of the Laplacian stack except for the last level is calculated from the Gaussian stack using `l_stack[i] = g_stack[i] - g_stack[i+1]`. For the last level of the Laplacian stack, we directly use the result from the last level of the Gaussian stack. This means that both stacks end up with the same number of images.
 
 Here are levels 0, 2, 4, 6, and 7 of my Laplacian stack, where we use a total of 8 layers (so layer 7 is the last). These levels are shown from top to bottom. From left to right, the columns are: apple, orange, masked apple, masked orange, combined masked apple + masked orange.
