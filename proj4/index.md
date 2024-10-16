@@ -149,7 +149,7 @@ I used the following procedure to warp one image towards another:
 2. Get the four corners of the source image and stack them row-by-row into a matrix of homogeneous coordinates. In other words, convert the four corners' points from `(x, y)` to `(x, y, 1)` and stack them into a 4x3 matrix. Let's call this matrix `src_bounds`.
 3. Warp the bounding box of the image by doing a matrix multiplication `trg_bounds = src_bounds @ H.T`.
 4. Use `skimage.draw.polygon` to get the points in the quadrilateral bounded by the warped four corners. Make sure that the coordinates passed into the `polygon` function are all positive, and calculate the output shape of the warped image using the minimum and maximum of the warped image corners. Let's call these points in the quadrilateral `pixel_coords`.
-5. Use the inverse transform `np.linalg.inv(H)` to find the pixel value that each new warped pixel should have by calculating `pixel_coords @ np.linalg.inv(H).T`. Use `scipy.interpolate.griddata` to interpolate pixel values in the warped image.
+5. Find each point in the original image corresponding to each warped pixel by calculating `pixel_coords @ np.linalg.inv(H).T`, making use of the inverse transform. Use `scipy.interpolate.griddata` to interpolate pixel values in the warped image.
 
 This warp transforms the source image's points to make them aligned with the corresponding points in the target image.
 
