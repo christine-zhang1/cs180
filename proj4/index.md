@@ -1,7 +1,7 @@
 # Image Warping and Mosaicing
 
 ## Shoot Pictures
-For the mosaics, I took pictures in Souvenir Coffee Co. on College Avenue, in my living room, and __. I took these with my iPhone 11 Pro.
+For the mosaics, I took pictures in Souvenir Coffee on College Avenue, in my living room, and in front of the physics building. I shot these with my iPhone 11 Pro.
 
 Souvenir Coffee:
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
@@ -35,188 +35,138 @@ My living room:
     </div>
 </div>
 
-Other mosaic:
-
-## Recover Homographies
-To compute the mid-way face using `warp_frac=0.5` and `dissolve_frac=0.5`, I used the following process:
-
-1. Calculate the average points using `(1-warp_frac) * points1 + warp_frac * points2`.
-2. Get the Delaunay triangulation of the average points.
-3. For each triangle, compute an affine transformation matrix between that triangle in each of the original images and its corresponding triangle in the Delaunay average triangulation. This matrix is used for warping the images.
-4. Get the average triangle's pixels using `skimage.draw.polygon`.
-5. Find the pixels in each of the original images corresponding to the average triangle by taking the inverse of the affine transformation matrix computed in step 3.
-6. Cross dissolve these pixels to get the final face image using `(1-dissolve_frac) * img1[y1, x1] + dissolve_frac * img2[y2, x2]`.
-
+My kitchen:
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/cz_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me </p>
+        <img src="images/kitchen1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/kt_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">My friend Kerrine </p>
+        <img src="images/kitchen2.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
-
     <div style="text-align: center;">
-        <img src="images/midway_face.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mid-way face </p>
-    </div>
-</div>
-
-## Part 3: The Morph Sequence
-I created the morph sequence by varying `warp_frac` and `dissolve_frac` from 0 to 1 in the procedure described above. `warp_frac = dissolve_frac = 0` is my face, and `warp_frac = dissolve_frac = 1` is Kerrine's face.
-
-<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="text-align: center;">
-        <img src="images/morph_sequence.gif" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/kitchen3.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
 
-## Part 4: The Mean Face of a Population
-I used photographs from the [FEI Face Database](https://fei.edu.br/~cet/facedatabase.html), which contains images of 200 individuals' faces taken at the Artificial Intelligence Laboratory of FEI in São Bernardo do Campo, São Paulo, Brazil. There are 100 male and 100 female subjects, with ages ranging from 19 to 40 years. Each individual has a neutral face image and a smiling face image.
-
-Here are the images of person 1 in the dataset.
+## Recover Homographies
+I defined correspondences in pairs of images. Let's call the points in the source image $(x_i, y_i)$ and the corresponding points in the target image $(x_i', y_i')$. Here are the correspondence points for the photos taken in Souvenir Coffee.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/1a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Neutral </p>
+        <img src="images/im1_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/1b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Smiling </p>
+        <img src="images/im2_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
 
-These photos are spatially normalized. The database also contains annotations of these faces with 46 correspondence points.
+We want to recover the 3x3 transformation matrix in this equation relating $(x, y)$ to $(x', y')$.
 
-To compute the mean neutral and mean smiling face of the population, I used the following procedure:
+$$
+\begin{pmatrix}
+a & b & c \\
+d & e & f \\
+g & h & 1
+\end{pmatrix}
+\begin{pmatrix}
+x \\
+y \\
+1
+\end{pmatrix}
+=
+\begin{pmatrix}
+wx' \\
+wy' \\
+w
+\end{pmatrix}
+$$
 
-1. Get the average face shape by taking the average of the 46 correspondence points across all 200 images. Add the four corners of the image dimensions as 4 extra correspondence points.
-2. Warp each face into the average face shape using the procedure from part 2, but instead of having a second face image as the target, use the average shape correspondence points.
-3. Take the average color of all the warped images to get the final mean face image.
+Expanding the matrix multiplication into a system of equations, we get
+$$
+ax + by + c = wx' \\
+dx + ey + f = wy' \\
+gx + hy + 1 = w
+$$
+
+Grouping the terms with $x'$ and $y'$, we get
+$$
+ax + by + c = (gx + hy + 1)x' \\
+dx + ey + f = (gx + hy + 1)y'
+$$
+
+We can then isolate $x'$ and $y'$:
+$$
+ax + by + c - gx'x - hy'x' = x' \\
+dx + ey + f - gx'y' - hy'y' = y'
+$$
+
+This gives the matrix equation:
+$$
+\begin{pmatrix}
+x & y & 1 & 0 & 0 & 0 & -xx' & -yx' \\
+0 & 0 & 0 & x & y & 1 & -xy' & -yy'
+\end{pmatrix}
+\begin{pmatrix}
+a \\
+b \\
+c \\
+d \\
+e \\
+f \\
+g \\
+h
+\end{pmatrix}
+=
+\begin{pmatrix}
+x' \\
+y'
+\end{pmatrix}
+$$
+
+We can create this matrix equation for all of the $(x_i, y_i)$ and corresponding $(x_i', y_i')$. We can then stack all of these equations together (in matrix form) to form an overconstrained system of equations that we can approximately solve using least squares. We get a length 8 vector as the solution, and we can then stack a 1 at the bottom and then reshape this into a 3x3 matrix. We call this matrix our homography H.
+
+## Warp Images
+I computed the homography matrix H according to the previous part, and I warped my source image towards the target image using the homography. This transforms the source image's points such that they align with the corresponding points in the target image. For this part, I dynamically calculated the size of the bounding box of the new image based on the image warp.
+
+## Rectify Images
+With the image warping function, we can "rectify" images that have a known rectangle in them, even if the rectangle is not directly facing the camera in the initial photo. We can choose four corners of the rectangle in the image, and we can then compute a homography between that rectangle's points and an actual rectangle with points that we define ourselves (e.g. `[(200, 200), (300, 200), (300, 400), (200, 400)]`). This warps the image so that the rectangle in the image is now facing the camera.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
+    <div style="font-weight: bold;">Original image with rectification points</div>
+    <div style="font-weight: bold;">Warped image</div>
+
     <div style="text-align: center;">
-        <img src="images/avg_result_neutral.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mean neutral face</p>
+        <img src="images/desk_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/avg_result_smiling.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mean smiling face</p>
-    </div>
-</div>
-
-Here are some of the dataset faces warped into the average face.
-
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="font-weight: bold;">Original image</div>
-    <div style="font-weight: bold;">Warped to average</div>
-
-    <div style="text-align: center;">
-        <img src="images/88a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 88, neutral </p>
+        <img src="images/desk_warped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/88a_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 88, warped to mean neutral </p>
+        <img src="images/fridge_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/156a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 156, neutral</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/156a_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 156, warped to mean neutral </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/188a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 188, neutral</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/188a_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 188, warped to mean neutral </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/88b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 88, smiling </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/88b_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 88, warped to mean smiling </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/156b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 156, smiling</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/156b_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 156, warped to mean smiling </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/188b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 188, smiling</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/188b_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Person 188, warped to mean smiling </p>
+        <img src="images/fridge_warped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
 
-Here is my face warped into the average geometry as well as the average face warped into my geometry. I labeled points on my face in the same order and location as the correspondence points in the FEI dataset.
-
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="text-align: center;">
-        <img src="images/cz_face_resized.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/cz_warp_to_avg.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me warped to mean neutral face </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/cz_warp_to_avg_smiling.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Me warped to mean smiling face</p>
-    </div>
-</div>
-
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="text-align: center;">
-        <img src="images/avg_warp_to_cz.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mean neutral face warped to my geometry</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/avg_warp_to_cz_smiling.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mean smiling face warped to my geometry</p>
-    </div>
-</div>
-
-## Part 5: Caricatures — Extrapolating from the Mean
+## Blend Images into a Mosaic
 I created a caricature of my face by calculating extrapolated correspondence points and warping my face to the triangulation formed by those points. I computed `p + 1.4(q - p)` for the extrapolated correspondence points, where `p` denotes the correspondence points on my face and `q` denotes the correspondence points on the mean face of the FEI dataset.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
