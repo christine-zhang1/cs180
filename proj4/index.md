@@ -5,7 +5,7 @@
 </script>
 
 ## Shoot Pictures
-For the mosaics, I took pictures in Souvenir Coffee on College Avenue, in my living room, and in front of the physics building. I shot these with my iPhone 11 Pro.
+For the mosaics, I took pictures in Souvenir Coffee on College Avenue, in my living room, and in my kitchen. I shot these with my iPhone 11 Pro.
 
 Souvenir Coffee:
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
@@ -95,6 +95,7 @@ w
 $$
 
 Expanding the matrix multiplication into a system of equations, we get
+
 $$
 ax + by + c = wx' \\
 dx + ey + f = wy' \\
@@ -102,12 +103,14 @@ gx + hy + 1 = w
 $$
 
 Grouping the terms with $$x'$$ and $$y'$$, we get
+
 $$
 ax + by + c = (gx + hy + 1)x' \\
 dx + ey + f = (gx + hy + 1)y'
 $$
 
 We can then isolate $$x'$$ and $$y'$$:
+
 $$
 ax + by + c - gx'x - hy'x' = x' \\
 dx + ey + f - gx'y' - hy'y' = y'
@@ -137,7 +140,7 @@ y'
 \end{pmatrix}
 $$
 
-We can create this matrix equation for all of the $(x_i, y_i)$ and corresponding $(x_i', y_i')$. We can then stack all of these equations together (in matrix form) to form an overconstrained system of equations that we can approximately solve using least squares. We get a length 8 vector as the solution, and we can then stack a 1 at the bottom and then reshape this into a 3x3 matrix. We call this matrix our homography `H`.
+We can create this matrix equation for all of the $$(x_i, y_i)$$ and corresponding $$(x_i', y_i')$$. We can then stack all of these equations together (in matrix form) to form an overconstrained system of equations that we can approximately solve using least squares. We get a length 8 vector as the solution, and we can then stack a 1 at the bottom and then reshape this into a 3x3 matrix. We call this matrix our homography `H`.
 
 ## Warp Images
 I used the following procedure to warp my images:
@@ -220,7 +223,7 @@ Here are the distance transforms for the warped/padded Souvenir Coffee photos.
 
 We can then blend these images into a mosaic using the procedure outlined above.
 
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
         <img src="images/souvenir_unblended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic before blending</p>
@@ -252,7 +255,7 @@ Living room:
     </div>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
         <img src="images/room_unblended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic before blending</p>
@@ -282,7 +285,7 @@ Kitchen:
     </div>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
         <img src="images/kitchen_unblended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic before blending</p>
