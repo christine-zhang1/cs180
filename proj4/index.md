@@ -1,4 +1,4 @@
-# Image Warping and Mosaicing
+# Project 4A: Image Warping and Mosaicing
 
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
@@ -11,12 +11,12 @@ Souvenir Coffee:
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/img1_half.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/img1_half.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/img2_half.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/img2_half.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 </div>
@@ -25,16 +25,16 @@ My living room:
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/room1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/room1.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/room2.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/room2.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
     <div style="text-align: center;">
-        <img src="images/room3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/room3.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
@@ -43,16 +43,16 @@ My kitchen:
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/kitchen1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/kitchen1.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/kitchen2.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/kitchen2.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
     <div style="text-align: center;">
-        <img src="images/kitchen3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/kitchen3.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
@@ -63,12 +63,12 @@ I defined correspondences in pairs of images. Let's call the points in the sourc
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/im1_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/im1_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/im2_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/im2_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
@@ -154,7 +154,7 @@ I used the following procedure to warp one image towards another:
 This warp transforms the source image's points to make them aligned with the corresponding points in the target image.
 
 ## Rectify Images
-With the image warping function, we can "rectify" images that have a known rectangle in them, even if the rectangle is not directly facing the camera in the initial photo. We can choose four corners of the rectangle in the image, and we can then compute a homography between that rectangle's points and an actual rectangle with points that we define ourselves (e.g. `[(200, 200), (300, 200), (300, 400), (200, 400)]`). This warps the image so that the rectangle in the image is now facing the camera.
+With the image warping function, we can "rectify" images that have a known rectangle in them, even if the rectangle is not directly facing the camera in the initial photo. We can choose four corners of the rectangle in the image as the source points, and we can create an actual rectangle with points that we define ourselves (e.g. `[(200, 200), (300, 200), (300, 400), (200, 400)]`) as the target points. Then, we can compute a homography between our source rectangle points in the image and our actual target rectangle. This warps the image so that the rectangle in the image is now facing the camera.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
@@ -162,22 +162,22 @@ With the image warping function, we can "rectify" images that have a known recta
     <div style="font-weight: bold;">Warped image</div>
 
     <div style="text-align: center;">
-        <img src="images/desk_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/desk_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/desk_warped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/desk_warped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/fridge_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/fridge_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/fridge_warped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/fridge_warped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
@@ -192,7 +192,7 @@ To blend the images together in the mosaic, I used two-band blending with a dist
 1. Compute the distance transform mask for both images. The distance transform sets each pixel inside a region (in this case, the image's bounding box) to be the Euclidean distance to the nearest edge. The final mask is normalized between 0 and 1. See images below for examples. Let's call the masks `mask1` and `mask2` for the first and second image respectively.
 2. Find the low frequencies and high frequencies of each image. I obtained the low frequencies by blurring the image with a Gaussian filter of kernel size 7 and sigma 2, and I obtained the high frequencies by subtracting the low frequencies from the original image. I used my code from project 2 for the blurring. Let's call the low and high frequencies for the first image `low1` and `high1`, and similarly `low2` and `high2` for the second image.
 3. Combine the low frequencies of the two images using a weighted average, where the weights are the images' respective masks. I calculated this using `(low1 * mask1 + low2 * mask2) / (mask1 + mask2)`, where the division ensured that the weights summed to 1 everywhere that either of the masks were nonzero. If both of the masks were 0 at a certain pixel, then I just set that pixel to 0 (avoiding zero division error) since neither image was present at that pixel.
-4. Combine the high frequencies by taking `high1` where `mask1` was greater than `mask2`, and `high2` otherwise.
+4. Combine the high frequencies by taking `high1` where `mask1` is greater than `mask2`, and `high2` otherwise.
 5. Add the low frequency blend to the high frequency blend to get the final mosaic.
 
 Here are the distance transforms for the warped/padded Souvenir Coffee photos.
@@ -203,22 +203,22 @@ Here are the distance transforms for the warped/padded Souvenir Coffee photos.
     <div style="font-weight: bold;">Distance transform</div>
 
     <div style="text-align: center;">
-        <img src="images/souvenir1_warped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/souvenir1_warped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/souvenir1_mask.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/souvenir1_mask.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/souvenir_padded.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/souvenir_padded.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/souvenir2_mask.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/souvenir2_mask.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
@@ -227,17 +227,17 @@ We can then blend these images into a mosaic using the procedure outlined above.
 
 <div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
-        <img src="images/souvenir_unblended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/souvenir_unblended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic before blending</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/souvenir_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/souvenir_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic after blending</p>
     </div>
 </div>
 
-The seam between the images in the ceiling is much more smooth asfter the blend, especially near the light.
+The seam between the images in the ceiling is much more smooth after the blend, especially near the light.
 
 I repeated this process on photos taken in my living room and my kitchen.
 
@@ -245,28 +245,28 @@ Living room:
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/room1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/room1.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/room2.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/room2.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
     <div style="text-align: center;">
-        <img src="images/room3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/room3.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
 
 <div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
-        <img src="images/room_unblended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/room_unblended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic before blending</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/room_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/room_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic after blending</p>
     </div>
 </div>
@@ -275,33 +275,58 @@ Kitchen:
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/kitchen1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/kitchen1.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/kitchen2.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/kitchen2.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
     <div style="text-align: center;">
-        <img src="images/kitchen3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/kitchen3.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
 
 <div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
-        <img src="images/kitchen_unblended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/kitchen_unblended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic before blending</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images/kitchen_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/kitchen_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic after blending</p>
     </div>
 </div>
 
-The blending seems particularly useful for mosaics of 3 images compared to mosaics of 2 images. In the kitchen mosaic, the lighting is a bit brighter in the rightmost piece, but this difference in lighting is already there in the original images.
+In the kitchen mosaic, the lighting is a bit brighter in the rightmost piece, but this difference in lighting is already there in the original images. Some details in the living room mosaic and kitchen mosaic aren't exactly aligned, but I attribute this to imperfections in my manual labeling of correspondence points as opposed to issues with my warping or blending procedures. This is something that we will improve upon in Part B when we automatically choose correspondence points for stitching images together.
+
+# Project 4B: Feature Matching for Autostitching
+
+## Harris Interest Point Detector
+I used the provided code `harris.py` to find the Harris corners in my images. For these images below, I used the code with `num_peaks = 200` in the `peak_local_max` function in the `get_harris_corners` function, so that it would generate at most 200 peaks. The Harris Interest Point Detector finds peaks in the matrix (see right image below) as the "corners" of the image.
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+    <div style="text-align: center;">
+        <img src="images_4b/souvenir1_harris_pts_200.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Souvenir Cafe image with labeled Harris points</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/souvenir1_harris_arr.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Harris matrix</p>
+    </div>
+</div>
+
+## Adaptive Non-Maximal Suppression (ANMS)
+
+## Feature Descriptor Extraction
+
+## Feature Matching
+
+## Random Sample Consensus (RANSAC)
 
 ## Reflection
 I learned a lot from this project! It was really cool to see all my work come together when I got the blending to work for my mosaics. It feels like everything in this class is coming together, since we had to do alignment, blurring, low pass / high pass, blending, and warping. I learned more about the warping process and was able to try many different blending methods before finding one that worked well, which gave me some more experience into figuring out how to blend images.
