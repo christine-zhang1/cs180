@@ -504,7 +504,7 @@ Here are the feature matches between my two Souvenir images.
 
 Here are images of mosaics using manually labeled correspondences and mosaics using autostitching.
 
-<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
         <img src="images_4a/souvenir_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
