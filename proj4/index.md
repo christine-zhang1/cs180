@@ -391,8 +391,10 @@ To match features between two images whose feature matrices were named `features
 
 Using `lowe_threshold = 0.3` and `num_anms_pts = 64` (from the ANMS section) gives around 13-17 feature matches, depending on the images. Here are some examples of feature matches between the two Souvenir Coffee images.
 
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
+    <div style="font-weight: bold;">Souvenir image 1</div>
+    <div style="font-weight: bold;">Souvenir image 2</div>
     <div style="font-weight: bold;">Souvenir image 1</div>
     <div style="font-weight: bold;">Souvenir image 2</div>
 
@@ -504,37 +506,34 @@ Here are images of mosaics using manually labeled correspondences and mosaics us
 
 <div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
 
-    <div style="font-weight: bold;">Manual Correspondences</div>
-    <div style="font-weight: bold;">Autostitching</div>
-
     <div style="text-align: center;">
         <img src="images_4a/souvenir_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Souvenir with manual correspondence labeling</p>
     </div>
 
     <div style="text-align: center;">
         <img src="images_4b/souvenir_automosaic.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Souvenir with autostitching</p>
     </div>
 
     <div style="text-align: center;">
         <img src="images_4a/room_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Living room with manual correspondence labeling</p>
     </div>
 
     <div style="text-align: center;">
         <img src="images_4b/room_automosaic.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Living room with autostitching</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images_4a/kitchen_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images_4a/kitchen_blended_new.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Kitchen with manual correspondence labeling</p>
     </div>
 
     <div style="text-align: center;">
         <img src="images_4b/kitchen_automosaic_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Kitchen with autostitching</p>
     </div>
 </div>
 
