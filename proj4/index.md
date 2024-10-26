@@ -292,17 +292,17 @@ Kitchen:
 
 <div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
-        <img src="images_4a/kitchen_unblended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/kitchen_unblended_new.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic before blending</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images_4a/kitchen_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images_4a/kitchen_blended_new.jpg" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic after blending</p>
     </div>
 </div>
 
-In the kitchen mosaic, the lighting is a bit brighter in the rightmost piece, but this difference in lighting is already there in the original images. Some details in the living room mosaic and kitchen mosaic aren't exactly aligned, but I attribute this to imperfections in my manual labeling of correspondence points as opposed to issues with my warping or blending procedures. This is something that we will improve upon in Part B when we automatically choose correspondence points for stitching images together.
+In the kitchen mosaic, there is an increase in brightness from the leftmost image to the middle image to the rightmost image. This difference in lighting is already there in the original kitchen photos — compare the color of the chairs in the left two images, and the color of the floor tiles in the right two images. Some finer details in the living room mosaic and kitchen mosaic are off by a few pixels, but I attribute this to imperfections in my manual labeling of correspondence points as opposed to issues with my warping or blending procedures. This is something that we will improve upon in Part B when we automatically choose correspondence points for stitching images together.
 
 # Project 4B: Feature Matching for Autostitching
 
@@ -312,7 +312,7 @@ I used the provided code `harris.py` to find the Harris corners in my images. Fo
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
         <img src="images_4b/souvenir1_harris_pts_200.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Souvenir Cafe image with labeled Harris points</p>
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Souvenir Coffee image with labeled Harris points</p>
     </div>
 
     <div style="text-align: center;">
@@ -333,7 +333,7 @@ Adaptive non-maximal suppression (ANMS) helps mitigate this issue. In the ANMS p
 5. What's left now is to compute the minimum suppression radius $$r_i = \min_j \left\vert x_i - x_j \right\vert$$ such that the inequality from step 2 is true for all `x_j`. Qualitatively, this means that the minimum suppression radius is determined by the nearest neighbor `x_j` such that `c_robust * f(x_j) > f(x_i)`. To code this, I obtained the minimum radius for each point using `radii = np.min(masked_dists, axis=1)`, and then got the indices of `radii` sorted in decreasing order by `sorted_indices = (-radii).argsort()`.
 6. Get the resulting corners by indexing into `coords` (coordinates of our Harris corners) using `sorted_indices`: `sorted_corners = coords.T[sorted_indices]`. Get the desired number of ANMS points by splicing this list using `points = sorted_corners[:num_anms_pts]`.
 
-Here is the Souvenir Cafe image from above after the ANMS procedure.
+Here is the Souvenir Coffee image from above after the ANMS procedure.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
@@ -368,7 +368,7 @@ For each point obtained from ANMS, I used the following procedure:
 
 Each of these vectors is a feature descriptor of the image. I stacked these vectors from all ANMS points into a `features` matrix of shape `(num_anms_points, 8*8*3)`. I did this for each image in the mosaic I was creating, so I ended up with 2 or 3 `features` matrices (depending on whether my mosaic was using 2 or 3 images).
 
-Here are all 64 feature descriptors, without normalization, from the Souvenir Cafe image.
+Here are all 64 feature descriptors, without normalization, from the Souvenir Coffee image.
 
 <div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
@@ -378,10 +378,169 @@ Here are all 64 feature descriptors, without normalization, from the Souvenir Ca
 </div>
 
 ## Feature Matching
+To match features between two images whose feature matrices were named `features1` and `features2`, I used the following procedure:
 
+1. Compute pairwise differences between each `(1, 8*8*3)` feature descriptor using `pairwise_diff = features1[:, np.newaxis, :] - features2[np.newaxis, :, :]`, again making use of numpy broadcasting.
+2. Calculate the sum of squared differences between each pair of features using `ssd = np.sum(pairwise_diff ** 2, axis=-1)`.
+3. Sort the `ssd` array within each row in ascending order, where each row represents a feature descriptor from the first image, so that the first element in the row is the feature's "nearest neighbor" in terms of feature similarity. We can do this using `sorted_ssd = np.sort(ssd)`.
+4. Find the Lowe score for each feature by dividing the distance to its nearest neighbor by the distance to its second nearest neighbor. Since we sorted `ssd` within each row in ascending order, we can get the Lowe score for all features by doing `lowe = sorted_ssd[:, 0] / sorted_ssd[:, 1]`.
+5. Extract the features with Lowe score less than the Lowe threshold by `lowe_mask = lowe < lowe_threshold`. I used `lowe_threshold = 0.3`. The idea behind the Lowe score is that if a feature is a true match with another feature, then its nearest neighbor distance (to the correct matching feature) should be much smaller than its second nearest neighbor distance (to an incorrect match).
+6. Get the indices of the nearest neighbor for each feature (so these are the features of image 2) using `sorted_ssd_idx = ssd.argsort()` and then `closest = sorted_ssd_idx[:, 0]`, since the item with the lowest SSD value of each row will be the first element of each row in `sorted_ssd_idx`.
+7. Pair these nearest neighbor indices with the corresponding features in the image 1 using `matches = np.stack([np.arange(0, closest.shape[0]), closest]).T`, since the features of the image 1 are ordered accordingly in its rows and their indices are given by `np.arange(0, closest.shape[0])`. `matches` is then an array of dimension `(num_anms_points, 2)`, with its first column as `np.arange(0, num_anms_points)` and second column as indices for `features2`, such that each row of `matches` corresponds to a pair of indices in `features1` and `features2` where the second feature is the nearest neighbor of the first feature.
+8. Extract the final feature matches using `matches[lowe_mask]` to ensure that all the matches lie within the Lowe threshold.
+
+Using `lowe_threshold = 0.3` and `num_anms_pts = 64` (from the ANMS section) gives around 13-17 feature matches, depending on the images. Here are some examples of feature matches between the two Souvenir Coffee images.
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="font-weight: bold;">Souvenir image 1</div>
+    <div style="font-weight: bold;">Souvenir image 2</div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/feature_match0a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/feature_match0b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/feature_match1a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/feature_match1b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/feature_match2a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/feature_match2b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/feature_match3a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/feature_match3b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/feature_match4a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/feature_match4b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/feature_match5a.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/feature_match5b.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
+
+Here are the feature matches between my two Souvenir images.
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images_4b/souvenir1_feature_matches.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/souvenir2_feature_matches.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
 
 ## Random Sample Consensus (RANSAC)
+To implement RANSAC, I used the following procedure:
 
+1. Split up the `matches` from Feature Matching into `matches1` and `matches2`, where `matches1` denotes the coordinate points that correspond to the first image's feature matches, and similarly for `matches2` and the second image.
+2. Randomly select four feature matches using `rnd_idx = np.random.choice(matches1.shape[0], 4, replace=False)`, then `corr1 = matches1[rnd_idx]` and `corr2 = matches2[rnd_idx]`.
+3. Compute the exact homography matrix between `corr1` and `corr2` (not using least squares).
+4. Convert each row in `matches1` from `(x, y)` to `(x, y, 1)`, and call this resulting array `points1_homogeneous`. Apply the transformation to go from `matches1` to `matches2` using `points1_transformed = points1_homogeneous @ H.T`. Divide the first two columns of `points1_transformed` by the last column to "undo" the change into homogeneous coordinates.
+5. Calculate the Euclidean distance between each pair of points in `dist = points1_transformed` and `matches2` using `np.sqrt(np.sum((matches2 - points1_transformed)**2, axis=1))`. We say that an inlier has a Euclidean distance less than some `inlier_thresh`, so we compute a mask `inlier_mask = dist < inlier_thresh`. The number of inliers is then the number of "true" entries in this mask, so we get `num_inliers = np.sum(mask)`.
+6. Repeat steps 2-3 `num_iter` times, and keep track of the highest number of inliers from all transformations as well as the `inlier_mask` that corresponds to this, which we call `ransac_mask`.
+7. Get the final feature matches using `pts1 = matches1[ransac_mask]` and `pts2 = matches2[ransac_mask]`. Then, do the procedure from Project 4A to warp and blend images into a mosaic using `pts1` and `pts2` as the correspondence points for the two images.
+
+I used `num_iter = 1000` and `inlier_thresh = 0.8`. Here are the final RANSAC matches between my two Souvenir images.
+
+Here are the feature matches between my two Souvenir images.
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images_4b/souvenir1_ransac_matches.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/souvenir2_ransac_matches.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
+
+Here are images of mosaics using manually labeled correspondences and mosaics using autostitching.
+
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="font-weight: bold;">Manual Correspondences</div>
+    <div style="font-weight: bold;">Autostitching</div>
+
+    <div style="text-align: center;">
+        <img src="images_4a/souvenir_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/souvenir_automosaic.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4a/room_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/room_automosaic.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4a/kitchen_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images_4b/kitchen_automosaic_cropped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
+
+We can see that the autostitching makes the mosaics look better. There are some details in the mosaics with manually labeled correspondences that aren't exactly aligned, such as the line on the kitchen table and the line near the top left of the mattress in the living room. The autostitching procedure eliminates human error from the correspondence labeling process, which helps the mosaics turn out much cleaner because I likely had some imperfections in getting the exact pixels to match when I was labeling correspondences manually.
 
 ## Reflection
-I learned a lot from this project! It was really cool to see all my work come together when I got the blending to work for my mosaics. It feels like everything in this class is coming together, since we had to do alignment, blurring, low pass / high pass, blending, and warping. I learned more about the warping process and was able to try many different blending methods before finding one that worked well, which gave me some more experience into figuring out how to blend images.
+In Project 4A, it was really cool to see all my work come together when I got the blending to work for my mosaics. It felt like everything in this class was coming together, since we had to do alignment, blurring, low pass / high pass, blending, and warping. I learned more about the warping process and was able to try many different blending methods before finding one that worked well, which gave me some more experience into figuring out how to blend images.
+
+In project 4B, I liked seeing how autostitching was able to improve the quality of my mosaics. Autostitching definitely feels both more efficient and less error-prone than manually labeling correspondences. I learned about the RANSAC process in more depth, and I particularly enjoyed learning about how we can use `distance to nearest neighbor / distance to second nearest neighbor` as a metric for feature matching. I thought that was a really neat bit of logic in figuring out whether a feature was a match or not.
