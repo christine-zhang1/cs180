@@ -477,7 +477,7 @@ Here are the feature matches between my two Souvenir images.
 </div>
 
 ## Random Sample Consensus (RANSAC)
-To implement RANSAC, I used the following procedure:
+To implement RANSAC for computing a homography, I used the following procedure:
 
 1. Split up the `matches` from Feature Matching into `matches1` and `matches2`, where `matches1` denotes the coordinate points that correspond to the first image's feature matches, and similarly for `matches2` and the second image.
 2. Randomly select four feature matches using `rnd_idx = np.random.choice(matches1.shape[0], 4, replace=False)`, then `corr1 = matches1[rnd_idx]` and `corr2 = matches2[rnd_idx]`.
