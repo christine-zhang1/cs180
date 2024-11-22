@@ -153,20 +153,20 @@ I used a Gaussian blur of kernel size 7 and sigma 2 to try to denoise these imag
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=750</p>
     </div>
     <div style="text-align: center;">
-        <img src="images/part1/gbf_250.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part1/gbf250.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gaussian blur denoising at t=250</p>
     </div>
     <div style="text-align: center;">
-        <img src="images/part1/gbf_500.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part1/gbf500.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gaussian blur denoising at t=500</p>
     </div>
     <div style="text-align: center;">
-        <img src="images/part1/gbf_750.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part1/gbf750.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gaussian blur denoising at t=750</p>
     </div>
 </div>
 
-## 1.3: One-Step Denoising
+## Part 1.3: One-Step Denoising
 We used the DeepFloyd stage 1 UNet to denoise the image by estimating the noise in the image and then removing it. We got the estimate of the clean image by rearranging the equation above to be an expression for $$x_0$$ in terms of $$x_t$$ (the noised image) and $$\epsilon$$ (the estimated noise from the UNet output).
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
@@ -204,7 +204,7 @@ We used the DeepFloyd stage 1 UNet to denoise the image by estimating the noise 
     </div>
 </div>
 
-## 1.4 Iterative Denoising
+## Part 1.4: Iterative Denoising
 The results were much better with one-step denoising compared to classical denoising, but the still performance degraded as more noise was added to the image. We used iterative denoising to address this issue. We created a list `strided_timesteps` of monotonically decreasing timesteps, starting at 990 and ending at 0 in 30 step increments. Thus, `strided_timesteps[0]` corresponded to pure noise, and `strided_timesteps[-1]` to the clean image. On the `i`th denoising step at `t = strided_timesteps[i]`, we get to `t' = strided_timesteps[i+1]` (slightly less noisy) using the following formula:
 
 $$
@@ -260,36 +260,34 @@ The variables are defined in the spec. $$v_\sigma$$ is random noise that we add 
     </div>
 </div>
 
-## 1.5: Diffusion Model Sampling
+## Part 1.5: Diffusion Model Sampling
 Now, we can generate images from scratch by setting `i_start=0` in the call to `iterative_denoise` and passing in pure noise. This effectively denoises pure noise to create a new image. We did this on the prompt "a high quality photo". Here are 5 sampled images.
 
 <div style="display: grid; grid-template-columns: repeat(5, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/part1/1.5/generated1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part1/1.5/generated1.png" alt="img" style="width: 150%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
     <div style="text-align: center;">
-        <img src="images/part1/1.5/generated2.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part1/1.5/generated2.png" alt="img" style="width: 150%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
     <div style="text-align: center;">
-        <img src="images/part1/1.5/generated3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part1/1.5/generated3.png" alt="img" style="width: 150%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
     <div style="text-align: center;">
-        <img src="images/part1/1.5/generated4.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part1/1.5/generated4.png" alt="img" style="width: 150%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
     <div style="text-align: center;">
-        <img src="images/part1/1.5/generated5.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part1/1.5/generated5.png" alt="img" style="width: 150%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
 
-The desk image may look a bit odd, but notice how all the pictures behind the monitor have been warped so that they are more rectangular. The laptop is at an angle compared to the monitor and looks stretched out in the warped image, which is expected because we chose the monitor's screen as the rectification points. If you consider only the monitor, keyboard, and pictures on the wall in the back, the rectification is more clear.
-
-## Blend Images into a Mosaic
+## Part 1.6: Classifier-Free Guidance (CFG)
 To create a mosaic, I chose one image to be the reference image, and warped the other images towards the reference image by computing homographies between each image and the reference image. Specifically, I padded the reference image to a certain fixed size, adjusted the correspondence points labeled on the reference image accordingly, and warped the other images to this new padded image while making sure to keep the same image shape after the warp. This allowed the entire mosaic to fit on one larger canvas. I created mosaics of two and three images.
 
 To blend the images together in the mosaic, I used two-band blending with a distance transform mask. I used the following procedure to blend two images together:
