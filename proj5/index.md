@@ -19,7 +19,7 @@ We loaded stage 1 and stage 2 of the DeepFloyd model separately and generated im
     <div style="font-weight: bold;">a rocket ship</div>
     <div style="font-weight: bold;">an oil painting of a snowy mountain village</div>
 
-    <div style="font-weight: bold;">Stage 1, num_inference_steps=20</div>
+    <div style="font-weight: bold;">Stage 1 <br> num_inference_steps=20</div>
 
     <div style="text-align: center;">
         <img src="images/part0/stage_1_steps20_a man wearing a hat.png" alt="img" style="width: 100%; height: auto; display: block;">
@@ -36,7 +36,7 @@ We loaded stage 1 and stage 2 of the DeepFloyd model separately and generated im
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 
-    <div style="font-weight: bold;">Stage 1, num_inference_steps=40</div>
+    <div style="font-weight: bold;">Stage 1<br> num_inference_steps=40</div>
 
     <div style="text-align: center;">
         <img src="images/part0/stage_1_steps40_a man wearing a hat.png" alt="img" style="width: 100%; height: auto; display: block;">
@@ -53,7 +53,7 @@ We loaded stage 1 and stage 2 of the DeepFloyd model separately and generated im
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 
-    <div style="font-weight: bold;">Stage 2, num_inference_steps=20</div>
+    <div style="font-weight: bold;">Stage 2<br> num_inference_steps=20</div>
 
     <div style="text-align: center;">
         <img src="images/part0/stage_2_steps20_a man wearing a hat.png" alt="img" style="width: 100%; height: auto; display: block;">
@@ -70,7 +70,7 @@ We loaded stage 1 and stage 2 of the DeepFloyd model separately and generated im
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 
-    <div style="font-weight: bold;">Stage 2, num_inference_steps=40</div>
+    <div style="font-weight: bold;">Stage 2<br> num_inference_steps=40</div>
 
     <div style="text-align: center;">
         <img src="images/part0/stage_2_steps40_a man wearing a hat.png" alt="img" style="width: 100%; height: auto; display: block;">
@@ -87,7 +87,7 @@ We loaded stage 1 and stage 2 of the DeepFloyd model separately and generated im
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 
-    <div style="font-weight: bold;">Stage 2, num_inference_steps=80</div>
+    <div style="font-weight: bold;">Stage 2<br> num_inference_steps=80</div>
 
     <div style="text-align: center;">
         <img src="images/part0/stage_2_steps80_a man wearing a hat.png" alt="img" style="width: 100%; height: auto; display: block;">
@@ -106,182 +106,183 @@ We loaded stage 1 and stage 2 of the DeepFloyd model separately and generated im
 </div>
 
 ## Part 1.1: Implementing the Forward Process
+We implemented the forward diffusion process in `forward(im, t)`, defined by 
 
+$$
+q(x_t \mid x_0) &= \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t} x_0, (1 - \bar{\alpha}_t)I) \\
+x_t &= \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \, \epsilon, \quad \epsilon \sim \mathcal{N}(0, 1)
+$$
+
+We were given the $$\bar{\alpha}_t$$ values for each $$t$$, where $$\bar{\alpha}_t$$ is close to 1 for small $$t$$ (clean image) and close to 0 for large $$t$$ (pure noise). We ran the forward process for `t = 250, 500, 700`.
+
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/campanile.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Campanile</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/forward_250.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=250</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/forward_500.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=500</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/forward_750.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=750</p>
+    </div>
+</div>
 
 ## Part 1.2: Classical Denoising
-For the mosaics, I took pictures in Souvenir Coffee on College Avenue, in my living room, and in my kitchen. I shot these with my iPhone 11 Pro.
+I used a Gaussian blur of kernel size 7 and sigma 2 to try to denoise these images classically.
 
-Souvenir Coffee:
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="text-align: center;">
-        <img src="images_4a/img1_half.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images_4a/img2_half.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
-    </div>
-</div>
-
-My living room:
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images_4a/room1.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images_4a/room2.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images/part1/forward_250.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=250</p>
     </div>
     <div style="text-align: center;">
-        <img src="images_4a/room3.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images/part1/forward_500.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=500</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/forward_750.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=750</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/gbf_250.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gaussian blur denoising at t=250</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/gbf_500.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gaussian blur denoising at t=500</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/gbf_750.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gaussian blur denoising at t=750</p>
     </div>
 </div>
 
-My kitchen:
+## 1.3: One-Step Denoising
+We used the DeepFloyd stage 1 UNet to denoise the image by estimating the noise in the image and then removing it. We got the estimate of the clean image by rearranging the equation above to be an expression for $$x_0$$ in terms of $$x_t$$ (the noised image) and $$\epsilon$$ (the estimated noise from the UNet output).
+
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
+    <div></div>
     <div style="text-align: center;">
-        <img src="images_4a/kitchen1.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
+        <img src="images/campanile.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original Campanile</p>
     </div>
+    <div></div>
 
     <div style="text-align: center;">
-        <img src="images_4a/kitchen2.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images/part1/forward_250.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=250</p>
     </div>
     <div style="text-align: center;">
-        <img src="images_4a/kitchen3.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images/part1/forward_500.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=500</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/forward_750.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=750</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/unetdenoise250.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">One-step denoising at t=250</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/unetdenoise500.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">One-step denoising at t=500</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/unetdenoise750.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">One-step denoising at t=750</p>
     </div>
 </div>
 
-## Recover Homographies
-I defined correspondences in pairs of images. Let's call the points in the source image $$(x_i, y_i)$$ and the corresponding points in the target image $$(x_i', y_i')$$. Here are the correspondence points for the photos taken in Souvenir Coffee.
+## 1.4 Iterative Denoising
+The results were much better with one-step denoising compared to classical denoising, but the still performance degraded as more noise was added to the image. We used iterative denoising to address this issue. We created a list `strided_timesteps` of monotonically decreasing timesteps, starting at 990 and ending at 0 in 30 step increments. Thus, `strided_timesteps[0]` corresponded to pure noise, and `strided_timesteps[-1]` to the clean image. On the `i`th denoising step at `t = strided_timesteps[i]`, we get to `t' = strided_timesteps[i+1]` (slightly less noisy) using the following formula:
 
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+$$
+x_{t'} = \frac{\sqrt{\bar{\alpha}_{t'} \beta_t}}{1 - \bar{\alpha}_t} x_0 + \frac{\sqrt{\alpha_t (1 - \bar{\alpha}_{t'})}}{1 - \bar{\alpha}_t} x_t + v_\sigma
+$$
+
+The variables are defined in the spec. $$v_\sigma$$ is random noise that we add via `add_variance`, defined for us in the starter code. We implemented the function `iterative_denoise(image, i_start)`, where `image` is a noisy image and `i_start` is the index at which we start at in `strided_timesteps` (i.e. how noised the image is). We added noise to the image using `t=strided_timesteps[10]` and then ran `iterative_denoise` on the image using `i_start=0` for the results below.
+
+<div style="display: grid; grid-template-columns: repeat(5, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images_4a/im1_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images/part1/1.4/iterdenoise90.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=90</p>
     </div>
-
     <div style="text-align: center;">
-        <img src="images_4a/im2_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images/part1/1.4/iterdenoise240.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=240</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.4/iterdenoise390.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=390</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.4/iterdenoise540.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=540</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.4/noisy690.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Noisy Campanile at t=690</p>
     </div>
 </div>
 
-We want to recover the 3x3 transformation matrix in this equation relating $$(x, y)$$ to $$(x', y')$$.
-
-$$
-\begin{bmatrix}
-a & b & c \\
-d & e & f \\
-g & h & 1
-\end{bmatrix}
-\begin{bmatrix}
-x \\
-y \\
-1
-\end{bmatrix}
-=
-\begin{bmatrix}
-wx' \\
-wy' \\
-w6
-\end{bmatrix}
-$$
-
-Expanding the matrix multiplication into a system of equations, we get
-
-$$
-ax + by + c = wx' \\
-dx + ey + f = wy' \\
-gx + hy + 1 = w
-$$
-
-We can use the last equation here as an expression for $$w$$. Substituting this into the first two equations, we get
-
-$$
-ax + by + c = (gx + hy + 1)x' \\
-dx + ey + f = (gx + hy + 1)y'
-$$
-
-We can rewrite this so that we have $$x'$$ and $$y'$$ by themselves on the RHS of the equation:
-
-$$
-ax + by + c - gx'x - hy'x' = x' \\
-dx + ey + f - gx'y' - hy'y' = y'
-$$
-
-This gives the matrix equation:
-
-$$
-\begin{bmatrix}
-x & y & 1 & 0 & 0 & 0 & -xx' & -yx' \\
-0 & 0 & 0 & x & y & 1 & -xy' & -yy'
-\end{bmatrix}
-\begin{bmatrix}
-a \\
-b \\
-c \\
-d \\
-e \\
-f \\
-g \\
-h
-\end{bmatrix}
-=
-\begin{bmatrix}
-x' \\
-y'
-\end{bmatrix}
-$$
-
-We can create this matrix equation for all of the $$(x_i, y_i)$$ and corresponding $$(x_i', y_i')$$. We can then stack all of these equations together (in matrix form) to form an overconstrained system of equations that we can approximately solve using least squares. We get a length 8 vector as the solution. We can append a 1 to the bottom of this vector and then reshape this into a 3x3 matrix. We call this matrix our homography `H`.
-
-## Warp Images
-I used the following procedure to warp one image towards another:
-
-1. Compute the homography matrix `H` from the source image to the target image according to the procedure in the previous part.
-2. Get the four corners of the source image and stack them row-by-row into a matrix of homogeneous coordinates. In other words, convert the four corners' points from `(x, y)` to `(x, y, 1)` and stack them into a 4x3 matrix. Let's call this matrix `src_bounds`.
-3. Warp the bounding box of the image by doing a matrix multiplication `trg_bounds = src_bounds @ H.T`.
-4. Use `skimage.draw.polygon` to get the points in the quadrilateral bounded by the warped four corners. Make sure that the coordinates passed into the `polygon` function are all positive, and calculate the output shape of the warped image using the minimum and maximum of the warped image corners. Let's call these points in the quadrilateral `pixel_coords`.
-5. Find each point in the original image corresponding to each warped pixel by calculating `pixel_coords @ np.linalg.inv(H).T`, making use of the inverse transform. Use `scipy.interpolate.griddata` to interpolate pixel values in the warped image.
-
-This warp transforms the source image's points to make them aligned with the corresponding points in the target image.
-
-## Rectify Images
-With the image warping function, we can "rectify" images that have a known rectangle in them, even if the rectangle is not directly facing the camera in the initial photo. We can choose four corners of the rectangle in the image as the source points, and we can create an actual rectangle with points that we define ourselves (e.g. `[(200, 200), (300, 200), (300, 400), (200, 400)]`) as the target points. Then, we can compute a homography between our source rectangle points in the image and our actual target rectangle. This warps the image so that the rectangle in the image is now facing the camera.
-
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="font-weight: bold;">Original image with rectification points</div>
-    <div style="font-weight: bold;">Warped image</div>
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images_4a/desk_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images/campanile.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original Campanile</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images_4a/desk_warped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images/part1/1.4/iterdenoiseresult.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Iteratively denoised Campanile</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images_4a/fridge_pts.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images/part1/1.4/onestepdenoise.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">One-step denoised Campanile</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images_4a/fridge_warped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part1/1.4/gaussiandenoise.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Gaussian blurred Campanile</p>
+    </div>
+</div>
+
+## 1.5: Diffusion Model Sampling
+Now, we can generate images from scratch by setting `i_start=0` in the call to `iterative_denoise` and passing in pure noise. This effectively denoises pure noise to create a new image. We did this on the prompt "a high quality photo". Here are 5 sampled images.
+
+<div style="display: grid; grid-template-columns: repeat(5, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
+    <div style="text-align: center;">
+        <img src="images/part1/1.5/generated1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.5/generated2.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.5/generated3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.5/generated4.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.5/generated5.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
