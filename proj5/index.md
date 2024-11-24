@@ -38,23 +38,6 @@ We loaded stage 1 and stage 2 of the DeepFloyd model separately and generated im
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 
-    <div style="font-weight: bold;">Stage 1<br> num_inference_steps=40</div>
-
-    <div style="text-align: center;">
-        <img src="images/part0/stage_1_steps40_a man wearing a hat.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part0/stage_1_steps40_a rocket ship.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images/part0/stage_1_steps40_an oil painting of a snowy mountain village.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
-    </div>
-
     <div style="font-weight: bold;">Stage 2<br> num_inference_steps=20</div>
 
     <div style="text-align: center;">
@@ -106,6 +89,8 @@ We loaded stage 1 and stage 2 of the DeepFloyd model separately and generated im
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 </div>
+
+We can see that as we increase the number of inference steps, the images become more realistic and detailed. For instance, we can see more details in the wrinkles between the man's eyebrows and in the UFOs in the background of the rocket ship image. All of the images seem faithful to the text prompts, but they just differ in the amount of fine detail that is present in the image, based on `num_inference_steps`.
 
 ## Part 1.1: Implementing the Forward Process
 We implemented the forward diffusion process in `forward(im, t)`, defined by 
@@ -687,7 +672,7 @@ We denoise an image at step `t` normally using one prompt to get noise estimate 
 
 We implemented the algorithm as described in the spec.
 
-Here is an anagram from the prompts `'an oil painting of an old man'` and `'an oil painting of people around a campfire`.
+Here is an anagram from the prompts `'an oil painting of an old man'` and `'an oil painting of people around a campfire'`.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
@@ -700,7 +685,7 @@ Here is an anagram from the prompts `'an oil painting of an old man'` and `'an o
     </div>
 </div>
 
-Here is an anagram from the prompts `'a photo of a dog'` and `'a photo of a man`.
+Here is an anagram from the prompts `'a photo of a dog'` and `'a photo of a man'`.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
@@ -713,7 +698,7 @@ Here is an anagram from the prompts `'a photo of a dog'` and `'a photo of a man`
     </div>
 </div>
 
-Here is an anagram from the prompts `'an oil painting of a snowy mountain village'` and `'an oil painting of people around a campfire`.
+Here is an anagram from the prompts `'an oil painting of a snowy mountain village'` and `'an oil painting of people around a campfire'`.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
@@ -805,7 +790,7 @@ Here is the graph of training losses.
     </div>
 </div>
 
-Here are sample results on the test set after the 1st epoch of training.
+Here are sample results on the test set after the 1st epoch of training. The first column is the original clean image, the second column is the noisy image using $$\sigma=0.5$$, and the third column is the model output from denoising the noisy image.
 
 <div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
@@ -814,7 +799,7 @@ Here are sample results on the test set after the 1st epoch of training.
     </div>
 </div>
 
-Here are sample results on the test set after the 5th epoch of training.
+Here are sample results on the test set after the 5th epoch of training. Again, the first column is the original clean image, the second column is the noisy image using $$\sigma=0.5$$, and the third column is the model output from denoising the noisy image.
 
 <div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
@@ -877,7 +862,7 @@ Here are the sampling results from the time-conditional UNet at epochs 5, 10, an
 </div>
 
 ## Class Conditioning
-To improve performance, we also condition the UNet on the class of the digit 0-9. To do this, we add two more fully connected blocks to the UNet architecture that take in a one-hot vector for the class of the digit. Because we still want the model to work without class conditioning, we use a mask such that 10% of the time, we drop the class conditioning vector by setting it to 0. For training this model, we use the same hyperparameters and learning rate scheduler as in the time conditioning case.
+To improve performance, we also condition the UNet on the class of the digit 0-9. To do this, we add two more fully connected blocks to the UNet architecture that take in a one-hot vector for the class of the digit. Because we still want the model to work without class conditioning, we use a mask such that 10% of the time, we drop the class conditioning vector by setting it to 0. For training this model, we use the same hyperparameters and learning rate scheduler as in the time conditioning case. We implement the class conditioning by following the procedure specified in the project spec.
 
 Here is the training loss curve for the class conditional model.
 
