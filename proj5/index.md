@@ -110,10 +110,7 @@ We implemented the forward diffusion process in `forward(im, t)`, defined by
 
 $$
 q(x_t \mid x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t} x_0, (1 - \bar{\alpha}_t)I) \\
-$$
-
-$$
-x_t &= \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \, \epsilon, \quad \epsilon \sim \mathcal{N}(0, 1)
+x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon, \epsilon \sim \mathcal{N}(0, 1)
 $$
 
 We were given the $$\bar{\alpha}_t$$ values for each $$t$$, where $$\bar{\alpha}_t$$ is close to 1 for small $$t$$ (clean image) and close to 0 for large $$t$$ (pure noise). We ran the forward process for `t = 250, 500, 700`.
@@ -487,7 +484,7 @@ I did this on an image of tree clip art, as well as my hand-drawn images of an a
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Hand-Drawn Apple</p>
     </div>
 
-    div style="text-align: center;">
+    <div style="text-align: center;">
         <img src="images/part1/1.7.1/sky_istart1.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=1</p>
     </div>
@@ -740,7 +737,7 @@ Here is the hybrid image from the prompts "a lithograph of a skull" (low pass) a
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part1/1.9/hybrid_skull_waterfall.png" alt="img" style="width: 10%; height: auto; display: block;">
+        <img src="images/part1/1.9/hybrid_skull_waterfall.png" alt="img" style="width: 50%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
@@ -755,7 +752,7 @@ Here is the hybrid image from the prompts "a lithograph of a skull" (low pass) a
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part1/1.9/skull_houseplants.png" alt="img" style="width: 10%; height: auto; display: block;">
+        <img src="images/part1/1.9/skull_houseplants.png" alt="img" style="width: 50%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
@@ -770,7 +767,7 @@ Here is the hybrid image from the prompts "a lithograph of a panda" (low pass) a
     </div>
 
     <div style="text-align: center;">
-        <img src="images/part1/1.9/panda_houseplants2.png" alt="img" style="width: 10%; height: auto; display: block;">
+        <img src="images/part1/1.9/panda_houseplants2.png" alt="img" style="width: 50%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
@@ -778,3 +775,127 @@ Here is the hybrid image from the prompts "a lithograph of a panda" (low pass) a
 # Project 5B: Diffusion Models from Scratch
 ## Part 1: Training a Single-Step Denoising UNet
 
+We implemented the Single-Step Denoising UNet as specified by the process described in Part 1.1 of the project spec. 
+
+To train this denoiser, we need to generate training data pairs of $$(z, x)$$ where each $$x$$ is a clean MNIST digit and $$z$$ is a noised version. We use the following:
+
+$$
+z = x + \sigma \epsilon, \epsilon \sim \mathcal{N}(0, 1)
+$$
+
+Here is a visualization of the noising processes over $$\sigma = [0.1, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]$$, with normalized $$x \in [0, 1]$$. Each column corresponds to a sigma value in the list, in the order they are listed.
+
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+    <div style="text-align: center;">
+        <img src="images/partb/mnist_sigmas.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
+
+I trained the UNet to denoise noisy image $$z$$ with $$\sigma = 0.5$$ applied to clean image $$x$$. I used batch size 256, hidden dimension `D = 128`, and Adam optimizer with learning rate `1e-4`. I trained for 5 epochs. I used L2 loss between the denoised image output from the UNet and the clean image $$x$$.
+
+Here is the graph of training losses.
+
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+    <div style="text-align: center;">
+        <img src="images/partb/uncondunet_training_losses.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
+
+Here are sample results on the test set after the 1st epoch of training.
+
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+    <div style="text-align: center;">
+        <img src="images/partb/test_set_epochs_1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
+
+Here are sample results on the test set after the 5th epoch of training.
+
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+    <div style="text-align: center;">
+        <img src="images/partb/test_set_epochs_5.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
+
+We tested the model on MNIST images that were noised with different $$\sigma$$ values to see how well it performed on out-of-distribution data. Here are the results for $$\sigma = [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]$$
+
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+    <div style="text-align: center;">
+        <img src="images/partb/ood_testing.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
+
+## Part 2: Training a Diffusion Model
+### Time Conditioning
+We implemented the UNet with time conditioning according to the details and architecture specified in the project spec. Instead of a separate UNet for each timestep, we trained a model to be conditioned on the timestep. We added fully connected blocks for embedding the timestep into the up-layers of the UNet.
+
+This model predicts a noise estimate rather than the denoised image directly. We use L2 loss over the predicted noise using the model and the actual noise added to the image.
+
+Now, we noise images using the following formula:
+
+$$
+x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon, \epsilon \sim \mathcal{N}(0, 1)
+$$
+
+We want $$x_t$$ at $$t=0$$ to be the clean image and $$x_t$$ at $$t=T$$ to be pure noise. We create the beta, alpha_t, and alpha_t_bar lists as described in the spec. We use $$T=300$ as the total number of timesteps.
+
+We trained the model $$\epsilon_\theta (x_t, t)$$ to predict the noise in $$x_t$$ given a noisy image $$x_t$$ and timestep $$t$$. We used batch size 128, hidden dimension `D = 64`, and Adam optimizer with initial learning rate of `1e-3`. We also used an exponential learning rate decay scheduler with gamma $$0.1^{1/\text{num_epochs}}. We trained for 20 epochs. We normalized $$t$$ before passing it into the forward pass of the UNet.
+
+Here is the training loss curve.
+
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+    <div style="text-align: center;">
+        <img src="images/partb/timecondunet/timecondunet_losses.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
+
+Here are the sampling results from the time-conditional UNet at epochs 5, 10, and 20.
+
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+    <div style="text-align: center;">
+        <img src="images/partb/timecondunet/samples_epoch_5.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Epoch 5</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/partb/timecondunet/samples_epoch_10.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Epoch 10</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/partb/timecondunet/samples_epoch_20.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Epoch 20</p>
+    </div>
+</div>
+
+## Class Conditioning
+To improve performance, we also condition the UNet on the class of the digit 0-9. To do this, we add two more fully connected blocks to the UNet architecture that take in a one-hot vector for the class of the digit. Because we still want the model to work without class conditioning, we use a mask such that 10% of the time, we drop the class conditioning vector by setting it to 0. For training this model, we use the same hyperparameters and learning rate scheduler as in the time conditioning case.
+
+Here is the training loss curve for the class conditional model.
+
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+    <div style="text-align: center;">
+        <img src="images/partb/classcondunet/classcondunet_losses.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+</div>
+
+Here are the sampling results from the class-conditional UNet at epochs 5 and 20.
+
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+    <div style="text-align: center;">
+        <img src="images/partb/classcondunet/mixed_seeds_epoch_5.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Epoch 5</p>
+    </div>
+
+    <div style="text-align: center;">
+        <img src="images/partb/classcondunet/mixed_seeds_epoch_20.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Epoch 20</p>
+    </div>
+</div>
