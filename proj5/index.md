@@ -1,11 +1,11 @@
 # Project 5: Fun With Diffusion Models
+I switch between "I" and "we" as well as past and present tense in this website. Sorry!
+
 # Project 5A: The Power of Diffusion Models
 
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
-
-I switch between "I" and "we" as well as past and present tense in this website. Sorry!
 
 ## Part 0: Setup
 In this part, we used the DeepFloyd IF diffusion model, which is a two-stage model trained by Stability AI. We also used precomputed text embeddings to generate images. We used seed 88 for all parts.
