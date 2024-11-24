@@ -113,6 +113,12 @@ q(x_t \mid x_0) &= \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t} x_0, (1 - \bar{\alpha}
 x_t &= \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \, \epsilon, \quad \epsilon \sim \mathcal{N}(0, 1)
 $$
 
+$$
+ax + by + c = wx' \\
+dx + ey + f = wy' \\
+gx + hy + 1 = w
+$$
+
 We were given the $$\bar{\alpha}_t$$ values for each $$t$$, where $$\bar{\alpha}_t$$ is close to 1 for small $$t$$ (clean image) and close to 0 for large $$t$$ (pure noise). We ran the forward process for `t = 250, 500, 700`.
 
 <div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
@@ -288,129 +294,232 @@ Now, we can generate images from scratch by setting `i_start=0` in the call to `
 </div>
 
 ## Part 1.6: Classifier-Free Guidance (CFG)
-To create a mosaic, I chose one image to be the reference image, and warped the other images towards the reference image by computing homographies between each image and the reference image. Specifically, I padded the reference image to a certain fixed size, adjusted the correspondence points labeled on the reference image accordingly, and warped the other images to this new padded image while making sure to keep the same image shape after the warp. This allowed the entire mosaic to fit on one larger canvas. I created mosaics of two and three images.
+To further improve performance, we implemented classifier-free guidance. In CFG, we compute both a conditional and unconditional noise estimate, which are denoted $$\epsilon_c$$ and $$\epsilon_u$$ respectively. The new noise estimate using CFG is then
 
-To blend the images together in the mosaic, I used two-band blending with a distance transform mask. I used the following procedure to blend two images together:
+$$
+\epsilon = \epsilon_u + \gamma (\epsilon_c - \epsilon_u)
+$$
 
-1. Compute the distance transform mask for both images. The distance transform sets each pixel inside a region (in this case, the image's bounding box) to be the Euclidean distance to the nearest edge. The final mask is normalized between 0 and 1. See images below for examples. Let's call the masks `mask1` and `mask2` for the first and second image respectively.
-2. Find the low frequencies and high frequencies of each image. I obtained the low frequencies by blurring the image with a Gaussian filter of kernel size 7 and sigma 2, and I obtained the high frequencies by subtracting the low frequencies from the original image. I used my code from project 2 for the blurring. Let's call the low and high frequencies for the first image `low1` and `high1`, and similarly `low2` and `high2` for the second image.
-3. Combine the low frequencies of the two images using a weighted average, where the weights are the images' respective masks. I calculated this using `(low1 * mask1 + low2 * mask2) / (mask1 + mask2)`, where the division ensured that the weights summed to 1 everywhere that either of the masks were nonzero. If both of the masks were 0 at a certain pixel, then I just set that pixel to 0 (avoiding zero division error) since neither image was present at that pixel.
-4. Combine the high frequencies by taking `high1` where `mask1` is greater than `mask2`, and `high2` otherwise.
-5. Add the low frequency blend to the high frequency blend to get the final mosaic.
+We use $$\gamma = 7$$, and we use an empty prompt `""` for unconditional guidance.
 
-Here are the distance transforms for the warped/padded Souvenir Coffee photos.
+Here are images generated using CFG.
 
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="font-weight: bold;">Image</div>
-    <div style="font-weight: bold;">Distance transform</div>
+<div style="display: grid; grid-template-columns: repeat(5, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images_4a/souvenir1_warped.jpg" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/part1/1.6/cfg1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.6/cfg2.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.6/cfg3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.6/cfg4.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.6/cfg5.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 
+</div>
+
+## Part 1.7: Image-to-image Translation
+To make edits to existing images, we can take a real image, add noise to it, and then denoise it, following the SDEdit algorithm. The more noise we add, the more the model can be "creative" and generate something new (not in the original image). We use the noise levels `[1, 3, 5, 7, 10, 20]`, so we add noise using `forward(im, strided_timesteps[i_start])` and we denoise by passing in the appropriate `i_start` to `iterative_denoise_cfg`.
+
+I did this process on the Campanile image, as well as images of a dog and a tree.
+
+<div style="display: grid; grid-template-columns: repeat(7, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
     <div style="text-align: center;">
-        <img src="images_4a/souvenir1_mask.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images/part1/1.7.0/campanile_istart1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=1</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/campanile_istart3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=3</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/campanile_istart5.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=5</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/campanile_istart7.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=7</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/campanile_istart10.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=10</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/campanile_istart20.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=20</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/campanile_og.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Campanile</p>
+    </div>
+
+
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/dog_istart1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=1</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/dog_istart3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=3</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/dog_istart5.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=5</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/dog_istart7.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=7</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/dog_istart10.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=10</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/dog_istart20.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=20</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/dog.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Dog</p>
     </div>
 
     <div style="text-align: center;">
-        <img src="images_4a/souvenir_padded.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images/part1/1.7.0/tree_istart1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=1</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/tree_istart3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=3</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/tree_istart5.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=5</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/tree_istart7.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=7</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/tree_istart10.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=10</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/tree_istart20.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=20</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.0/tree.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Tree</p>
     </div>
 
+## Part 1.7.1: Editing Hand-Drawn and Web Images
+We experimented with hand-drawn and other non-realistic images using our diffusion model. We followed the same process as described above, using noise levels `[1, 3, 5, 7, 10, 20]` to noise and denoise images.
+
+I did this on an image of tree clip art, as well as my hand-drawn images of an apple and the sky. The yellow-ish circle in the sky image is supposed to be the Sun, although I don't think it came across very well after the code compressed my hand-drawn image.
+
+<div style="display: grid; grid-template-columns: repeat(7, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+
     <div style="text-align: center;">
-        <img src="images_4a/souvenir2_mask.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
+        <img src="images/part1/1.7.1/treeclipart_istart1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=1</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/treeclipart_istart3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=3</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/treeclipart_istart5.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=5</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/treeclipart_istart7.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=7</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/treeclipart_istart10.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=10</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/treeclipart_istart20.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=20</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/treeclipart.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Tree Clip Art</p>
+    </div>
+
+    div style="text-align: center;">
+        <img src="images/part1/1.7.1/apple_istart1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=1</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/apple_istart3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=3</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/apple_istart5.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=5</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/apple_istart7.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=7</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/apple_istart10.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=10</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/apple_istart20.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=20</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/apple.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Hand-Drawn Apple</p>
+    </div>
+
+    div style="text-align: center;">
+        <img src="images/part1/1.7.1/sky_istart1.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=1</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/sky_istart3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=3</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/sky_istart5.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=5</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/sky_istart7.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=7</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/sky_istart10.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=10</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/sky_istart20.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">SDEdit with i_start=20</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/part1/1.7.1/sky.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Hand-Drawn Sky</p>
     </div>
 </div>
 
-We can then blend these images into a mosaic using the procedure outlined above.
-
-<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
-    <div style="text-align: center;">
-        <img src="images_4a/souvenir_unblended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic before blending</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images_4a/souvenir_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic after blending</p>
-    </div>
-</div>
-
-The seam between the images in the ceiling is much more smooth after the blend, especially near the light.
-
-I repeated this process on photos taken in my living room and my kitchen.
-
-Living room:
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="text-align: center;">
-        <img src="images_4a/room1.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images_4a/room2.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
-    </div>
-    <div style="text-align: center;">
-        <img src="images_4a/room3.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
-    </div>
-</div>
-
-<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
-    <div style="text-align: center;">
-        <img src="images_4a/room_unblended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic before blending</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images_4a/room_blended.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic after blending</p>
-    </div>
-</div>
-
-Kitchen:
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
-
-    <div style="text-align: center;">
-        <img src="images_4a/kitchen1.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images_4a/kitchen2.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
-    </div>
-    <div style="text-align: center;">
-        <img src="images_4a/kitchen3.png" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
-    </div>
-</div>
-
-<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
-    <div style="text-align: center;">
-        <img src="images_4a/kitchen_unblended_new.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic before blending</p>
-    </div>
-
-    <div style="text-align: center;">
-        <img src="images_4a/kitchen_blended_new.jpg" alt="img" style="width: 100%; height: auto; display: block;">
-        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Mosaic after blending</p>
-    </div>
-</div>
-
-We can see that the blending helps a lot in these images to get rid of the seams!
-
-In the kitchen mosaic, there is an increase in brightness from the leftmost image to the middle image to the rightmost image. This difference in lighting is already there in the original kitchen photos — compare the color of the chairs in the left two images, and the color of the floor tiles in the right two images. Some finer details in the living room mosaic and kitchen mosaic are off by a few pixels, but I attribute this to imperfections in my manual labeling of correspondence points as opposed to issues with my warping or blending procedures. This is something that we will improve upon in Part B when we automatically choose correspondence points for stitching images together.
-
-# Project 4B: Feature Matching for Autostitching
-
-## Harris Interest Point Detector
+## Part 1.7.2: Inpainting
 I used the provided code `harris.py` to find the Harris corners in my images. For these images below, I used the code with `num_peaks = 200` in the `peak_local_max` function in the `get_harris_corners` function, so that it would generate at most 200 peaks. The Harris Interest Point Detector finds peaks in the matrix (see right image below) as the "corners" of the image.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
