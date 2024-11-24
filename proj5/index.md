@@ -110,14 +110,9 @@ We implemented the forward diffusion process in `forward(im, t)`, defined by
 
 $$
 q(x_t \mid x_0) &= \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t} x_0, (1 - \bar{\alpha}_t)I) \\
-x_t &= \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \, \epsilon, \quad \epsilon \sim \mathcal{N}(0, 1)
 $$
 
-$$
-ax + by + c = wx' \\
-dx + ey + f = wy' \\
-gx + hy + 1 = w
-$$
+x_t &= \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \, \epsilon, \quad \epsilon \sim \mathcal{N}(0, 1)
 
 We were given the $$\bar{\alpha}_t$$ values for each $$t$$, where $$\bar{\alpha}_t$$ is close to 1 for small $$t$$ (clean image) and close to 0 for large $$t$$ (pure noise). We ran the forward process for `t = 250, 500, 700`.
 
@@ -423,6 +418,7 @@ I did this process on the Campanile image, as well as images of a dog and a tree
         <img src="images/part1/1.7.0/tree.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Tree</p>
     </div>
+</div>
 
 ## Part 1.7.1: Editing Hand-Drawn and Web Images
 We experimented with hand-drawn and other non-realistic images using our diffusion model. We followed the same process as described above, using noise levels `[1, 3, 5, 7, 10, 20]` to noise and denoise images.
@@ -520,7 +516,10 @@ I did this on an image of tree clip art, as well as my hand-drawn images of an a
 </div>
 
 ## Part 1.7.2: Inpainting
-I used the provided code `harris.py` to find the Harris corners in my images. For these images below, I used the code with `num_peaks = 200` in the `peak_local_max` function in the `get_harris_corners` function, so that it would generate at most 200 peaks. The Harris Interest Point Detector finds peaks in the matrix (see right image below) as the "corners" of the image.
+We can use our model to inpaint, where we mask out one part of an image and use the model to fill it in. Given an image `x_orig` and a binary mask `m`, we can create a new image that has the same content where `m` is 0 and new content wherever `m` is 1. We run the diffusion denoising loop, but after every step, we "force" `x_t` to have the same pixels as `x_orig` where m is 0:
+
+$$
+$$
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
