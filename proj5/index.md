@@ -829,7 +829,7 @@ $$
 x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon, \epsilon \sim \mathcal{N}(0, 1)
 $$
 
-We want $$x_t$$ at $$t=0$$ to be the clean image and $$x_t$$ at $$t=T$$ to be pure noise. We create the beta, alpha_t, and alpha_t_bar lists as described in the spec. We use $$T=300$ as the total number of timesteps.
+We want $$x_t$$ at $$t=0$$ to be the clean image and $$x_t$$ at $$t=T$$ to be pure noise. We create the beta, alpha_t, and alpha_t_bar lists as described in the spec. We use $$T=300$$ as the total number of timesteps.
 
 We trained the model $$\epsilon_\theta (x_t, t)$$ to predict the noise in $$x_t$$ given a noisy image $$x_t$$ and timestep $$t$$. We used batch size 128, hidden dimension `D = 64`, and Adam optimizer with initial learning rate of `1e-3`. We also used an exponential learning rate decay scheduler with gamma $$0.1^{1/\text{num_epochs}}$$. We trained for 20 epochs. We normalized $$t$$ before passing it into the forward pass of the UNet.
 
