@@ -91,7 +91,7 @@ y \\
 \begin{bmatrix}
 wx' \\
 wy' \\
-w6
+w
 \end{bmatrix}
 $$
 
