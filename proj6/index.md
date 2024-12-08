@@ -47,7 +47,7 @@ Here is a gif showing the refocusing variation from depth factor 0 to depth fact
 
 <div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
-        <img src="images/lightfieldcamera/refocus_duration100.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/lightfieldcamera/refocus_duration100.gif" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 </div>
@@ -62,19 +62,19 @@ Here are my result using different `aperture` values. For all images in this par
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
-        <img src="images/lightfieldcamera/aperture1.png alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/lightfieldcamera/aperture1.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
     <div style="text-align: center;">
-        <img src="images/lightfieldcamera/aperture3.png alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/lightfieldcamera/aperture3.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
     <div style="text-align: center;">
-        <img src="images/lightfieldcamera/aperture5.png alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/lightfieldcamera/aperture5.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
     <div style="text-align: center;">
-        <img src="images/lightfieldcamera/aperture7.png alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/lightfieldcamera/aperture7.png" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
 </div>
@@ -85,7 +85,7 @@ Here is a gif showing the aperture variation from `aperture=1` to `aperture=7`.
 
 <div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
-        <img src="images/lightfieldcamera/aperture_duration50.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/lightfieldcamera/aperture_duration50.gif" alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"> </p>
     </div>
 </div>
@@ -98,6 +98,8 @@ I thought this project was really interesting! I liked getting to see how we cou
 For the Poisson blending portion of this project, I used the `poly2mask` function from the starter code in UIUC's version of the project [linked here](https://courses.grainger.illinois.edu/cs445/fa2023/projects/gradient/ComputationalPhotography_ProjectGradient.html), which I found while browsing submissions from students in Fall 2023. I only used this one method of the starter code to help generate binary masks for my images, since I did not want to draw my masks manually and I did not use the MATLAB starter code.
 
 ## Part 1: Toy Problem
+In this part, our goal is to reconstruct the Toy Story image using information from the image's gradients. The idea is that we can think of trying to solve a differential equation, where we can find an exact solution if we match the derivatives at every point and also satisfy an initial condition. In this part, we can reconstruct the Toy Story image (i.e. solve the differential equation) by requiring that all the x-gradients and y-gradients of our new image match the x-gradients and y-gradients of the original image, and also by requiring that the value of the top left corners in the new and original images are the same (this is the initial condition to the differential equation).
+
 
 
 ## Part 2: Poisson Blending
