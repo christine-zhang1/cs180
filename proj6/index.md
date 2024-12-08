@@ -1,5 +1,7 @@
 # Final Project
-I did the Light Field Camera project and the Gradient Domain Fusion project. I switch between "I" and "we" as well as past and present tense in this website. Sorry!
+I did the Light Field Camera project and the Gradient Domain Fusion project.
+
+I switch between "I" and "we" as well as past and present tense in this website. Sorry!
 
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
@@ -113,7 +115,7 @@ I solved this using least squares optimization `Ax=b` with a sparse matrix, wher
 5. Add the initial condition constraint: `A[counter, pixel_index(0, 0)] = 1` and `b[counter] = im[0, 0]`.
 6. Solve using `scipy.sparse.linalg.lsqr(A, b)` and reshape result to the original image shape.
 
-Here is my result.
+Here is my result — please ignore the size difference.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
@@ -156,7 +158,7 @@ Here is the procedure I used to blend images for this part:
 7. Copy the values in this result into the desired spot in the target image `trg`.
 8. Repeat this process for all 3 channels of the image.
 
-Here are my results using this procedure for a penguin and a snowy mountain with hikers.
+Here are my results using this procedure for a penguin and a snowy mountain with hikers. I scaled down the penguin image to make it smaller in the snowy mountain image.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
@@ -185,7 +187,7 @@ Here are my results using this procedure for a penguin and a snowy mountain with
     </div>
 </div>
 
-Here are results for a hot air balloon image and a beach image.
+Here are results for a hot air balloon and a beach.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
@@ -214,7 +216,7 @@ Here are results for a hot air balloon image and a beach image.
     </div>
 </div>
 
-Here are results for a cat image and a grass image.
+Here are results for a cat and grass.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
@@ -243,7 +245,38 @@ Here are results for a cat image and a grass image.
     </div>
 </div>
 
-As we can see,
+As we can see, the Poisson blending is effective at smoothly blending one image into another. There are some small issues at places where I did not draw the mask as tightly around the source region as I should have, such as between the cat's front legs and on the left side of the penguin image between its flipper and body. However, the rest of the blending seemed to work well, and I think these images would have blended a little better if the mask was tighter around the object. I followed the project spec when it said that "Object region selection can be done very crudely, with lots of room around the object."
 
 
 ## Bells & Whistles: Mixed Gradients
+Instead of using the gradients in the source image as the reference, we use either the gradient in the source image or target image, whichever has larger magnitude. The equation is as follows:
+
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+    <div style="text-align: center;">
+        <img src="images/gradientdomainfusion/mixedgrad_eq.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Equation from project spec</p>
+    </div>
+</div>
+
+Here `d_ij` is the value of the gradient from the source or the target image with larger magnitude. If `abs(s_i-s_j) > abs(t_i-t_j)`, then `d_ij = s_i-s_j`; otherwise, `d_ij = t_i-t_j`.
+
+The algorithm for mixed gradients was very similar to the algorithm to Poisson blending, but with just this one change (using `d_ij`) in the loop over the pixels.
+
+Here are the results using mixed gradients.
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+    <div style="text-align: center;">
+        <img src="images/gradientdomainfusion/penguin_hikers_mixed_grad.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Penguin on snowy mountain</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/gradientdomainfusion/hab_beach_mixed_grad.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Hot air balloon and beach</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/gradientdomainfusion/cat_grass_mixed_grad.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Cat on grass</p>
+    </div>
+</div>
+
+The cat/grass blend is better than before in that the blurry patch between its front legs is no longer there, but it got a little worse since the cat's body past its midsection seems to have faded out a bit. I believe this is because the cat's body is a bit blurred in the original cat photo, so the gradients there are low and get replaced by the gradients in the grass image, causing the cat to appear a bit see-through since some of its pixels got replaced with grass pixels. The penguin/mountain and hot air ballon/beach blends seem very similar to what they were before I added mixed gradients — they were already pretty good before, so I was not expecting too much new improvement from mixed gradients.
