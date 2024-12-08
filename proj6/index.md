@@ -279,4 +279,17 @@ Here are the results using mixed gradients.
     </div>
 </div>
 
-The cat/grass blend is better than before in that the blurry patch between its front legs is no longer there, but it got a little worse since the cat's body past its midsection seems to have faded out a bit. I believe this is because the cat's body is a bit blurred in the original cat photo, so the gradients there are low and get replaced by the gradients in the grass image, causing the cat to appear a bit see-through since some of its pixels got replaced by grass pixels. I think mixed gradient blending would work better if the entire desired object was in clear focus in the source image, like in the penguin and hot air balloon, so then the gradients on the desired region would be higher and would be preserved in mixed gradient blending. The penguin/mountain and hot air ballon/beach blends seem very similar to what they were before I added mixed gradients. They were already pretty good before, so I was not expecting too much new improvement from mixed gradient blending.
+The penguin/mountain and hot air ballon/beach blends seem very similar to what they were before I added mixed gradients. They were already pretty good before, so I was not expecting too much new improvement from mixed gradient blending.
+
+The cat/grass blend is better than before in that the blurry patch between its front legs is no longer there, but it got a little worse since the cat's body past its midsection seems to have faded out a bit. I believe this is because the cat's body is a bit blurred in the original cat photo, so the gradients there are low and get replaced by the gradients in the grass image, causing the cat to appear a bit see-through since some of its pixels got replaced by grass pixels. I think mixed gradient blending would work better if the entire desired object was in clear focus in the source image, like in the penguin and hot air balloon, so then the gradients on the desired region would be higher and would be preserved in mixed gradient blending.
+
+I tried mixed gradient blending again on the cat and grass, this time moving the cat so that it would be closer to the blurred section of the grass where its gradients might be greater than the grass's gradients.
+
+<div style="padding: 20px; max-width: 2400px; margin: auto; align-items: center; justify-items: center;">
+    <div style="text-align: center;">
+        <img src="images/gradientdomainfusion/cat_grass_mixed_grad3.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Cat (moved) on grass</p>
+    </div>
+</div>
+
+The result here is better! The cat is less see-through since its gradients were greater than the gradients of the blurred grass. Very cool!
