@@ -20,7 +20,7 @@ I chose to control the depth refocusing using a linear depth factor rather than 
 
 Here are my results using different depth factors.
 
-<div style="display: grid; grid-template-columns: auto repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
 
     <div style="text-align: center;">
         <img src="images/lightfieldcamera/df0.png" alt="img" style="width: 100%; height: auto; display: block;">
@@ -65,15 +65,15 @@ Here are my result using different `aperture` values. For all images in this par
         <img src="images/lightfieldcamera/aperture1.png alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
-    div style="text-align: center;">
+    <div style="text-align: center;">
         <img src="images/lightfieldcamera/aperture3.png alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
-    div style="text-align: center;">
+    <div style="text-align: center;">
         <img src="images/lightfieldcamera/aperture5.png alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
-    div style="text-align: center;">
+    <div style="text-align: center;">
         <img src="images/lightfieldcamera/aperture7.png alt="img" style="width: 100%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;"></p>
     </div>
@@ -95,10 +95,14 @@ I thought this project was really interesting! I liked getting to see how we cou
 
 
 # Gradient Domain Fusion
+For the Poisson blending portion of this project, I used the `poly2mask` function from the starter code in UIUC's version of the project [linked here](https://courses.grainger.illinois.edu/cs445/fa2023/projects/gradient/ComputationalPhotography_ProjectGradient.html), which I found while browsing submissions from students in Fall 2023. I only used this one method of the starter code to help generate binary masks for my images, since I did not want to draw my masks manually and I did not use the MATLAB starter code.
+
 ## Part 1: Toy Problem
 
 
 ## Part 2: Poisson Blending
+
+
 
 ## Bells & Whistles: Mixed Gradients
 
