@@ -123,7 +123,7 @@ Here is my result — please ignore the size difference.
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original image</p>
     </div>
     <div style="text-align: center;">
-        <img src="images/gradientdomainfusion/reconstructed_toy.png" alt="img" style="width: 50%; height: auto; display: block;">
+        <img src="images/gradientdomainfusion/reconstructed_toy.png" alt="img" style="width: 50%; height: auto; display: block; justify-items: center;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Reconstructed image</p>
     </div>
 </div>
