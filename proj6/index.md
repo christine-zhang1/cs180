@@ -18,7 +18,7 @@ I used the following procedure to refocus my images:
 4. Shift the image using `np.roll` with the `x_shift` and `y_shift` from the previous step.
 5. After doing steps 2-4 for all images (except for the center image), average all the shifted image results from step 4.
 
-I chose to control the depth refocusing using a linear depth factor rather than the `alpha` term from the paper, since it found a linear factor to be easier to control, more simple, and more understandable/intuitive.
+I chose to control the depth refocusing using a linear depth factor rather than the `alpha` term from the paper, since I found a linear factor to be easier to control, simpler, and more understandable/intuitive.
 
 Here are my results using different depth factors.
 
@@ -93,14 +93,14 @@ Here is a gif showing the aperture variation from `aperture=1` to `aperture=7`.
 </div>
 
 ## Summary
-I thought this project was really interesting! I liked getting to see how we could refocus depth by post-processing images that were taken with locations in a grid, and I also enjoyed visualizing the effect of aperture size on images.
+I thought this project was really interesting! I liked getting to see how we could refocus depth by post-processing images that were taken with locations in a grid, and I also enjoyed visualizing the effect of aperture size on images. I learned about ways that we can refocus depth and mimic different camera apertures just by relatively simple post-processing techniques.
 
 
 # Gradient Domain Fusion
 For the Poisson blending portion of this project, I used the `poly2mask` function from the starter code in UIUC's version of the project [linked here](https://courses.grainger.illinois.edu/cs445/fa2023/projects/gradient/ComputationalPhotography_ProjectGradient.html), which I found while browsing submissions from students in Fall 2023. I only used this one method of the starter code to help generate binary masks for my images, since I did not want to draw my masks manually and I did not use the MATLAB starter code.
 
 ## Part 1: Toy Problem
-In this part, our goal is to reconstruct the Toy Story image using information from the image's gradients. The idea is that we can think of trying to solve a differential equation, where we can find an exact solution if we match the derivatives at every point and also satisfy an initial condition. In this part, we can reconstruct the Toy Story image (i.e. solve the differential equation) by requiring that all the x-gradients and y-gradients of our new image match the x-gradients and y-gradients of the original image, and also by requiring that the value of the top left corners in the new and original images are the same (this is the initial condition to the differential equation).
+In this part, our goal is to reconstruct the Toy Story image using information from the image's gradients. The idea is that we can think of trying to solve a differential equation, where we can find an exact solution if we match the derivatives at every point and also satisfy an initial condition. In this part, we can reconstruct the Toy Story image (i.e. solve the differential equation) by requiring that all the x-gradients and y-gradients of our new image match the x-gradients and y-gradients of the original image, and also by requiring that the value of the top left corner in the new and original images are the same (this is the initial condition to the differential equation).
 
 If we denote the intensity of the source image at `(x, y)` as `s(x, y)` and the values of the image to solve for as `v(x, y)`, we get the following objectives:
 1. Minimize `(v(x+1,y) - v(x,y) - (s(x+1,y) - s(x,y)))^2`, which indicates that the x-gradients of `v` should match the x-gradients of `s`.
@@ -109,11 +109,11 @@ If we denote the intensity of the source image at `(x, y)` as `s(x, y)` and the 
 
 I solved this using least squares optimization `Ax=b` with a sparse matrix, where I solved for `x` as the pixel values of the new image. This was my procedure:
 1. Calculate the total number of constraints on the image's pixels as `num_constraints = rows*(cols-1) + (rows-1)*cols + 1`, where `rows` and `cols` are the height and width of the image respectively. The first term is from the x-gradient objective, which is why there is `cols-1` so we prevent index out-of-bounds errors since the objective requires us to do `x+1`. Similarly, the second term is from the y-gradient objective. The `+1` is from the last objective for the initial condition.
-2. Intialize a sparse matrix using `A = scipy.sparse.lil_matrix((num_constraints, n_pixels))`, where `n_pixels = rows * cols`. Initialize the least squares `b` vector in `Ax = b` using `b = np.zeros(num_constraints)`. This is because we want each row of `A` to represent a constraint. We also initialize a `counter` variable starting at 0.
+2. Initialize a sparse matrix using `A = scipy.sparse.lil_matrix((num_constraints, n_pixels))`, where `n_pixels = rows * cols`. Initialize the least squares `b` vector in `Ax = b` using `b = np.zeros(num_constraints)`. This is because we want each row of `A` to represent a constraint. We also initialize a `counter` variable starting at 0.
 3. Iterate through pixels in `rows` and `cols-1` for the x-gradient objective. At pixel `(i, j)`, we set `A[counter, pixel_index(i, j)] = -1` and `A[counter, pixel_index(i, j+1)] = 1`, which matches `v(x+1,y) - v(x,y)` in the objective function. Here, `pixel_index` is a function that returns `i * cols + j` in order to get the index of the pixel in a flat `(n_pixels,)` shape list. Also, set `b[counter] = im[i, j+1] - im[i, j]` to match `s(x+1,y) - s(x,y)` in the objective function. This sets the constraint for the x-gradient for one pixel `(i, j)` because least squares will try to make the gradient calculated by `v(x+1,y) - v(x,y)` match the corresponding value in the `b` vector, which is `s(x+1,y) - s(x,y)`. Then, increment `counter` for the next constraint. Do this for all pixels in `rows` and `cols-1` for the x-gradient objective.
 4. Iterate through pixels in `rows-1` and `cols` for the y-gradient objective. Follow the same logic as step 3, except add 1 to `i` instead of `j`.
 5. Add the initial condition constraint: `A[counter, pixel_index(0, 0)] = 1` and `b[counter] = im[0, 0]`.
-6. Solve using `scipy.sparse.linalg.lsqr(A, b)` and reshape result to the original image shape.
+6. Solve using `scipy.sparse.linalg.lsqr(A, b)` and reshape the result `x` to the original image shape.
 
 Here is my result — please ignore the size difference.
 
@@ -123,7 +123,7 @@ Here is my result — please ignore the size difference.
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Original image</p>
     </div>
     <div style="text-align: center;">
-        <img src="images/gradientdomainfusion/reconstructed_toy.png" alt="img" style="width: 100%; height: auto; display: block;">
+        <img src="images/gradientdomainfusion/reconstructed_toy.png" alt="img" style="width: 50%; height: auto; display: block;">
         <p style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #333;">Reconstructed image</p>
     </div>
 </div>
@@ -138,7 +138,7 @@ We can seamlessly blend images by leveraging the fact that we often notice the g
     </div>
 </div>
 
-Here, each `i` is a pixel is the source region `S`, which is the portion of the source image `s` that we want to blend into the target image. Each `j` is a neighboring pixel of `i`, specifically to the left, right, top, and bottom of `i`. The first summation term makes the gradients inside `S` in `v` match the gradients in `s`. The second summation term takes care of the boundary between `S` and the rest of the target image `t` — notice that the summation is over `i` that is in `S` but `j` that is not in `S`, meaning that the pixel `i` is on the boundary of `S`. Because we don't want to modify any pixels in the target image `t` outside of the region `S`, we want to make the pixel `j` in `v` be the same as the pixel `j` in `t`. This second summation then does the same thing as the first summation except with `v_j` replaced by `t_j` (where `j` is outside `S`).
+Here, each `i` is a pixel is the source region `S`, which is the portion of the source image `s` that we want to blend into the target image. Each `j` is a neighboring pixel of `i`, specifically to the left, right, top, and bottom of `i`. The first summation term makes the gradients inside `S` in `v` match the gradients in `s`. The second summation term takes care of the boundary between `S` and the rest of the target image `t` — notice that the summation is over `i` that is in `S` but `j` that is not in `S`, meaning that the pixel `i` is on the boundary of `S`. Because we don't want to modify any pixels in the target image `t` outside of the region `S`, we want to make the pixel `j` in `v` be the same as the pixel `j` in `t`. In other words, this means that the second summation does the same thing as the first summation except with `v_j` replaced by `t_j` (where `j` is outside `S`). We can think of this as solving a differential equation for the region `S`, with the initial condition being that the boundary just outside the region `S` is fixed to be the target image's pixels.
 
 I implemented this in a similar fashion to the Toy Problem part, by using least squares optimization `Ax=b` with a sparse matrix `A` to get the desired gradients to match. I defined a function `poisson_blend(src, trg, mask, pos_a, pos_b)`, where:
 * `src` was the source image,
@@ -151,14 +151,14 @@ I created masks using a modified version of the `get_points` function given to u
 Here is the procedure I used to blend images for this part:
 1. Initialize `A = lil_matrix((0, n_pixels))`, where `num_pixels = src_rows * src_cols`. I didn't calculate `num_constraints` upfront for this procedure, but rather just appended rows to `A` for each constraint. Initialize `b` as an empty list.
 2. Iterate through all pixels in the rows and columns of the source image `src`. If the value of the mask at that pixel is true, then `i` is in the region `S` and we iterate through the four neighboring `j` pixels of `i`.
-3. Initialize a row of `A` using `row = lil_matrix((1, n_pixels))`. Set `row[0, pixel_i] = 1` to match the `v_i` terms in the equation above. (`pixel_i` is some pseudocode for getting the `i` pixel as we have been describing)
+3. Initialize a row of `A` using `row = lil_matrix((1, n_pixels))`. Set `row[0, pixel_i] = 1` to match the `v_i` terms in the equation above. `pixel_i` is some pseudocode for getting the `i` pixel as we have been describing.
 4. If the value of the mask at pixel `j` is true, then set `row[0, pixel_j] = -1`, matching the first summation term. Stack the row onto the matrix `A`. Also, append `src[pixel_i] - src[pixel_j]` to `b` to match the rest of the first summation term.
-5. If the value of the mask at pixel `j` is false, then stack the row onto matrix `A` as is, and append `src[pixel_i] - src[pixel_j] + trg[pixel_j]` to `b` to match the second summation term.
+5. If the value of the mask at pixel `j` is false, then stack the row from step 3 onto matrix `A` as is, and append `src[pixel_i] - src[pixel_j] + trg[pixel_j]` to `b` to match the second summation term.
 6. When done iterating, solve `lsqr(A, b)` and reshape the result to the shape of the source image.
 7. Copy the values in this result into the desired spot in the target image `trg`.
 8. Repeat this process for all 3 channels of the image.
 
-Here are my results using this procedure for a penguin and a snowy mountain with hikers. I scaled down the penguin image to make it smaller in the snowy mountain image.
+Here are my results using this procedure for a penguin and a snowy mountain with hikers. I scaled down the penguin image to make it appear smaller in the snowy mountain image.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px; padding: 20px; max-width: 1200px; margin: auto; align-items: center; justify-items: center;">
     <div style="text-align: center;">
